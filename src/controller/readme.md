@@ -147,7 +147,7 @@ export class CreatePlayerDto {
 }
 
 // player.controller.ts
-import { Post, Body } from '@nestjs/common';
+import { Post, Body } from '@nestjs/common';+
 {
   @Post('/create')
   // 使用方式

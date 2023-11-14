@@ -18,10 +18,7 @@ export class PlayerController {
     // 如果使用了 @Res()/@Next() 无法直接返回值, 需要给装饰器@Res() 传递属性 passthrough: true 
     return ['James', 'Durant', 'Kyrie', 'Curry', '1']
     return JSON.stringify(['James', 'Durant', 'Kyrie', 'Curry', '1'])
-/*     return res.json({
-      code: 0,
-      data: 
-    }) */
+/*     return res.json({ code: 0, data: ['James', 'Durant', 'Kyrie', 'Curry', '1'] }) */
   }
   // ------------------ request object ----------
   @Get('/coach')

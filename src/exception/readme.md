@@ -188,3 +188,66 @@ async function bootstrap() {
   await app.listen(3000)
 }
 ```
+
+## Catch everything
+
+  When an exception is **unrecognized** (is neither HttpException nor a class that inherits from HttpException), the built-in
+  Exception filter generates the following default JSOn response:
+  (如果异常不是 HttpException 或者 继承自 HttpException, 内置的异常过滤器会生成一下默认的 json 作为响应返回给客户端 ).
+
+```ts
+{
+  statusCode: 500,
+  message: 'Internal server error'
+}
+```
+
+  In order to catch every unhandled exception, leave the **@Catch()** decorator's parameter list empty
+```ts
+@Controller()
+export class BrandController {
+  @Get('brand-list')
+  @UseFilters(HttpExceptionFilter) // 这个错误使用 HttpException无法捕获到
+  @UseFilters(AllExceptionsFilter)
+  /**
+   *{
+      statusCode: 500,
+      timestamp: 1700641656038,
+      path: "/api/v1/exception/brand_list"
+    }
+  */
+  getBrandList() {
+    a = 100
+    return ['apple', 'huawei', 'mi']
+  }
+}
+
+// 以下代码直接copy直官网
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import { HttpAdapterHost } from '@nestjs/core';
+
+@Catch()
+export class AllExceptionsFilter implements ExceptionFilter {
+  constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
+  catch(exception: unknown, host: ArgumentsHost): void {
+    const { httpAdapter } = this.httpAdapterHost;
+    const ctx = host.switchToHttp();
+    const httpStatus =
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : HttpStatus.INTERNAL_SERVER_ERROR;
+    const responseBody = {
+      statusCode: httpStatus,
+      timestamp: new Date().toISOString(),
+      path: httpAdapter.getRequestUrl(ctx.getRequest()),
+    };
+    httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
+  }
+}
+```

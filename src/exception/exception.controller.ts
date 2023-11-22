@@ -1,11 +1,12 @@
 import { BadRequestException, UnauthorizedException, UseFilters, Controller, Get, HttpException, HttpStatus, ForbiddenException } from '@nestjs/common'
 // import { CustomUnAuthorizedException } from './custom-exception-filter'
 import { HttpExceptionFilter } from './exception-filters'
+import { AllExceptionsFilter } from './catch-everything-filter'
 
 @Controller('exception')
-@UseFilters(new HttpExceptionFilter())
 export class ExceptionController {
   @Get('/phone_list')
+  @UseFilters(new HttpExceptionFilter())
   getPhoneList () {
     // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
     // return ['华为', '小米', '苹果']
@@ -42,5 +43,12 @@ export class ExceptionController {
     // throw new BadRequestException()
     // throw new UnauthorizedException()
     throw new ForbiddenException()
+  }
+  @Get('brand_list')
+  @UseFilters(AllExceptionsFilter)
+  getBrandList () {
+    // @ts-ignore
+    a = 123
+    return [1, 2, 3]
   }
 }

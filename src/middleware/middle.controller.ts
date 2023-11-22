@@ -10,4 +10,8 @@ export class MiddlewareController {
   handleLogin () {
     return '登录...'
   }
+  @Get('without-middleware')
+  handleGet () {
+    return 'without-middleware'
+  }
 }

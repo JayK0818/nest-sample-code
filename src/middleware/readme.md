@@ -67,6 +67,8 @@ export class AppController {
   }
 }
 ```
+### Asynchronous configure
+
   **configure()** 方法也可以使用异步, 可以使用 **async/await 语法**
 
 ```ts
@@ -88,4 +90,71 @@ export class AppModule implements NestModule {
       .forRoutes('middleware')
   }
 }
+```
+  The **forRoutes()** method can take a single string, multiple strings, a RouteInfo object, a controller class and even multiple controller
+  classes. In most cases you will probably just pass a list of **controllers** separated by commas.
+  (forRoutes() 方法可以接受一个字符串, 多个字符串, 一个路由对象， 一个控制器类 或者多个控制器类)
+
+### Excluding Route
+
+  At times we want to **exclude** certain routes from having the middleware applied. We can easily exclude certain routes with
+  the **exclude()** method (有时需要排除某些路由应用中间件).
+
+```ts
+import type { MiddlewareConsumer } from '@nestjs/common'
+import { NestModule, RequestMethod } from '@nestjs/common'
+
+export class MiddlewareModule implements NestModule {
+  configure (consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware)
+    // 在测试中 访问该路由还是会触发中间件 (暂未发现问题所在...)
+    .exclude({
+      path: 'middleware/without-middleware',
+      method: 
+    })
+    .forRoutes(MiddlewareController)
+  }
+}
+```
+
+## Functional middleware
+
+```ts
+// logger.controller.ts
+import type { Request, Response, NextFunction } from 'express';
+export function logger (req: Request, res: Response, next: NextFunction) {
+  console.log('function middleware')
+  next()
+}
+
+// 应用函数中间件和class中间件方法一样
+// middleware.module.ts
+import { MiddlewareController } from './middleware.module'
+import { MiddlewareConsumer, NestModule } from '@nestjs/common'
+import { logger } from './logger.middleware'
+
+export class MiddlewareModule implements NestModule {
+  configure (consumer: MiddleConsumer) {
+    consumer.apply(logger)
+    .forRoutes(MiddlewareController)
+  }
+}
+```
+
+## Multiple middleware
+
+  使用多个中间件
+
+```ts
+// logger.middleware
+export function logger_date (req, res, next) {
+  console.log(Date.now())
+  next()
+}
+
+// middleware.module.ts
+import { logger_date, logger } from './logger.middleware'
+//...
+consumer.apply(logger_date, logger) // 中间件按顺序执行
+  .forRoutes(MiddlewareController)
 ```

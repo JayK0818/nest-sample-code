@@ -8,10 +8,12 @@ import { AuthModule } from './module/author/author.module'
 import { MenuModule } from './module/menu/menu.module'
 import { MiddlewareModule } from './middleware/middleware.module'
 import { ExceptionModule } from './exception/exception.module'
+import { PipeModule } from './pipe/pipe.module'
 
 @Module({
   imports: [
-    CatsModule, BookModule, AuthModule, MenuModule, MiddlewareModule, ExceptionModule
+    CatsModule, BookModule, AuthModule, MenuModule, MiddlewareModule, ExceptionModule,
+    PipeModule
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

@@ -140,3 +140,48 @@ export class PipeController {
 ```
   type 表示获取参数使用的 装饰器的 类别, data 表示传递给 装饰器里的 字符串。metadata 表示在路由方法 标注的 参数类型。比如: String (如果省略了
   参数类型 或者 使用的是 JavaScript, metadata为 undefined)。
+
+## Schema based validation
+
+  We want to ensure that any incoming request to the create method contains a valid body (确保请求传递过来的参数是一个合法的对象)
+
+  以下是官网的一个例子, 使用zod 验证参数
+```ts
+// pipe.validation.ts
+import { PipeTransform, ArgumentMetadata, BadRequestException, Injectable } from '@nestjs/common'
+import { ZodObject } from 'zod'
+
+@Injectable()
+export class ZodValidationPipe implements PipeTransform {
+  constructor(private schema: ZodObject<any>) {}
+  transform (value: any, metadata: ArgumentMetadata) {
+    try {
+      this.schema.parse(value)
+    } catch (err) {
+      throw new BadRequestException('validation failed')
+    }
+    return value
+  }
+}
+
+// player.dot.ts
+import { z } from 'zod'
+const createPlayerSchema = z.object({
+  name: z.string(),
+  age: z.number()
+  team: z.string()
+}).required()
+
+type CreatePlayerDto = z.infer<typeof createPlayerSchema>
+
+// pipe.controller.ts
+@Post()
+/**
+ * 1. create an instance of the ZodValidationPipe
+ * 2. Pass the context-specific Zod schema in the class constructor of the pipe
+ * 3. Bind the pipe to the method
+*/
+@UsePipes(new ZodValidationPipe(createPlayerSchema))
+createPlayer (@Body() player: CreatePlayerDto) {
+}
+```

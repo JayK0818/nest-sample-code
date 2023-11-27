@@ -185,3 +185,92 @@ type CreatePlayerDto = z.infer<typeof createPlayerSchema>
 createPlayer (@Body() player: CreatePlayerDto) {
 }
 ```
+
+## Class Validator
+
+  Nest works well with the **class-validator** library. This powerful library allows you to use decorator-based validation.
+
+```ts
+npm install --save class-validator class-transformer
+```
+  以下 是官网的一个例子
+
+```ts
+// create-cat.dto.ts
+import { IsString, IsInt } from 'class-validator'
+export class CreateCatDto {
+  @IsString()
+  name: string;
+  @IsInt()
+  age: number;
+}
+
+// validation.pipe.ts
+import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from '@nestjs/common';
+import { validate } from 'class-validator'
+import { plainToInstance } from 'class-transformer';
+
+@Injectable()
+export class ValidationPipe implements PipeTransform {
+  // 支持同步和异步管道
+  async transform (value: any, { metatype }: ArgumentMetadata) {
+    // metatype 为参数的注解类型
+    /**
+     * It is responsible for bypassing the validation step when the current argument being processed is a native JavaScript type
+     * (如果原生的JavaScript类型则绕过参数验证)
+    */
+    if (!metatype || !this.toValidate(metatype)) {
+      return true
+    }
+    /**
+     * we use the class-transformer function **plainToInstance()** to transform our plain JavaScript argument object into
+     * a typed object so that we can apply validation.
+    */
+    const object = plainToInstance(metatype, value)
+    const errors = await validate(object)
+    if (errors.length > 0) {
+      throw new BadRequestException('validation failed')
+    }
+    return value
+  }
+  // 判断是否为原生类型
+  private toValidate(metatype: Function): boolean {
+    const types: Function[] = [String, Boolean, Number, Array, Object];
+    return !types.includes(metatype);
+  }
+}
+
+// cats.controller.ts
+@Controller()
+export class CatsController {
+  @Post()
+  async create(@Body(new ValidationPipe()) createCatDto: CreateCatDot) {
+  }
+}
+```
+
+## Global scoped pipes
+
+  全局作用于管道 Global pipes are used across the whole application, for every controller and every route handler.
+
+```ts
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe());
+  await app.listen(3000);
+}
+bootstrap();
+```
+
+## transformation use case
+
+  Another useful transformation case would be to select an **existing user** entity from the database using an id supplied in the request
+
+```ts
+@Get(':id')
+findOne(@Param('id', UserByIdPipe) userEntity: UserEntity) {
+  return userEntity;
+}
+```
+  Note that like all other transformation pipes, it receives an input value and returns an output value
+  (所有的管道数据转换, 接受一个值 并且返回一个值)

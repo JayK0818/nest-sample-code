@@ -1,6 +1,7 @@
 import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Query, UsePipes } from '@nestjs/common'
-import { CustomParseIntPipe, ZodValidationPipe } from './validation.pipe'
+import { CustomParseIntPipe, ZodValidationPipe, CreatePlayerValidationPipe } from './validation.pipe'
 import { createPlayerSchema, createPlayerDto } from './create-player.dto'
+import { CreateSingerDot } from './create-singer.dto'
 
 class PlayerId {
   id: number
@@ -54,10 +55,15 @@ export class PipeController {
     */
     return 'param'
   }
-  @Post('create')
+  @Post('player/create')
   @UsePipes(new ZodValidationPipe(createPlayerSchema))
   createPlayer (@Body() player: createPlayerDto) {
     console.log(player)
     return '创建成功'
+  }
+  @Post('singer/create')
+  createSinger (@Body() singer: CreateSingerDot) {
+    console.log('singer', singer)
+    return '创建球员成功'
   }
 }

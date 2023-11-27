@@ -13,3 +13,4 @@ export const createPlayerSchema = z.object({
 }).required()
 
 export type createPlayerDto = z.infer<typeof createPlayerSchema>
+

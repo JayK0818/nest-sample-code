@@ -9,11 +9,11 @@ import { MenuModule } from './module/menu/menu.module'
 import { MiddlewareModule } from './middleware/middleware.module'
 import { ExceptionModule } from './exception/exception.module'
 import { PipeModule } from './pipe/pipe.module'
-
+import { GuardModule } from './guards/guards.module'
 @Module({
   imports: [
     CatsModule, BookModule, AuthModule, MenuModule, MiddlewareModule, ExceptionModule,
-    PipeModule
+    PipeModule, GuardModule
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

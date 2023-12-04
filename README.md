@@ -1,73 +1,104 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Nestjs
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## @nestjs/config
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+In Node.js applications, it is common to use **.env** files, holding key-value pairs where each key presents a
+particular value, to present each environment. Running an app in different envirionments is then just a matter
+of swapping in the correct **.env** file.
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
+```js
+npm install @nestjs/config --save
 ```
 
-## Running the app
+@nestjs/config 在内部使用了 dotenv.
 
-```bash
-# development
-$ npm run start
+### ConfigModule
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```ts
+import { ConfiguModule } from '@nestjs/config';
+@Module({
+  imports: [ConfigModule.forRoot()],
+})
+export class AppModule {}
 ```
 
-## Test
+The above code will load and parse **.env** file from the default location(the project root directory), merge
+key/value pairs the **.env** file with environment variables assigned to **process.env**
+(上述代码 将会从项目根目录中加载并解析 .env 文件, 将环境变量分配到 process.env 对象上。)
 
-```bash
-# unit tests
-$ npm run test
+The **forRoot()** method registers the **ConfigService** provider, which provides a **get()** method for
+reading these parse/merged configuration variables.
+(forRoot()方法会注册 ConfigService 服务, 该服务提供一个 get() 方法用于读取 解析的 环境变量)。
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```ts
+import { ConfigModule } from '@nestjs/config'
+@Module({
+  providers: [
+    ConfigModule.forRoot({
+      ignoreEnvFile: true // 忽略 .env file文件。
+      envFilePath: '.development.env', // (默认从根目录中查找.env文件, 也可以手动指定)
+      envFilePath: ['.env.development.local', 'env.development'],
+      isGlobal: true
+    })
+  ]
+})
 ```
 
-## Support
+### ConfigService
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```ts
+import { ConfigService } from '@nestjs/config';
+@Injectable()
+export class ConfigurationService {
+  constructor(configService: ConfigService) {}
+  getUser() {
+    const user = this.configService.get<string>('DATABASE_USER');
+    return user;
+  }
+}
+```
 
-## Stay in touch
+## dotenv
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Dotenv is a zero-dependency module that loads environment variables for a **.env** file in to **process.env**.
 
-## License
+Create a **.env** file in the root of your project:
 
-Nest is [MIT licensed](LICENSE).
+### Config
+
+**config** will read your **.env** file, parse the contents, assign it to the **process.env**, and return an object
+with a parsed key containing the loaded content.
+(config 方法将会读取.env 后缀文件内容, 将内容以键值对的形式分配到 process.env 对象上 并返回一个 object.)
+
+```js
+// usage
+
+SECRET = 'HELLO WORLD';
+
+import 'dotent/config';
+// require('dotent').config()
+
+console.log(process.env);
+
+/**
+ * {
+ *    SECRET: 'hello world',
+      PASSWORD: '你好生活' 
+ * }
+*/
+```
+
+### Parsing
+
+It accepts a String or Buffer and will return an Object with the parsed keys and values.
+
+```js
+import * as dotenv from 'dotenv';
+
+const buffer = Buffer.from('BASIC=basic');
+const config = dotenv.parse(buffer);
+console.log(config, typeof config);
+/**
+ * { BASIC: 'basic' } object
+ */
+```

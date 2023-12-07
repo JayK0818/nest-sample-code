@@ -75,8 +75,8 @@ with a parsed key containing the loaded content.
 
 SECRET = 'HELLO WORLD';
 
-import 'dotent/config';
-// require('dotent').config()
+import 'dotenv/config';
+// require('dotenv').config()
 
 console.log(process.env);
 
@@ -102,3 +102,10 @@ console.log(config, typeof config);
  * { BASIC: 'basic' } object
  */
 ```
+## Rxjs
+
+  Rxjs is a library for composing asynchronous and event-based programs by using observable sequences.
+
+## Observable
+
+  Observables are lazy push collections of multiple values (可观测对象是多个值的延迟集合)

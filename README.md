@@ -109,3 +109,63 @@ console.log(config, typeof config);
 ## Observable
 
   Observables are lazy push collections of multiple values (可观测对象是多个值的延迟集合)
+
+```ts
+// 一个demo
+const observable = new Observable((subscriber) => {
+  subscriber.next(1)
+  subscriber.next(2)
+  subscriber.next(3)
+  setTimeout(() => {
+    subscriber.next(4)
+    subscriber.complete()
+  }, 1000)
+})
+
+console.log('just before subscribe')
+observable.subscribe({
+  next(v) {
+    console.log('got value:', x)
+  },
+  complete() {
+    console.log('done')
+  }
+})
+console.log('just after subscribe')
+
+/**
+ * 执行顺序为
+* just before subscribe
+    got value: 1
+    got value: 2
+    got value: 3
+    just after subscribe
+    got value: 4
+    done
+*/
+```
+### Pull and Push
+
+  In **Pull** systems, the Consumer determines when it receives data from the data Producer. The Producer itself is unaware of when the
+  data will be delivered to the Consumer.
+
+  In **Push** systems, the Producer determines when to send data to the Consumer. The Consumer is unaware of when it will receive that data.
+
+  An Observable is a **Producer** of multiple values, *pushing* then to Observers (Consumers).
+
+  Observables are able to deliver values either synchronously or asynchronously
+  (Observable 可以同步 也可以异步传递值)
+
+  What is the difference between an Observable and a function? (Observable 和 函数的区别是什么?)
+  Observables can return multiple values over time, Functions can only return one value (Observables 可以返回多个值, 然而函数只能返回一个值)
+
+```js
+import { Observable } from 'rxjs'
+const observable = new Observable((subscriber) => {
+  subscriber.next(1)
+  subscriber.next(2)
+})
+observable.subscribe(x => {
+  console.log(x)  // 1 2
+})
+```

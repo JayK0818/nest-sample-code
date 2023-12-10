@@ -178,7 +178,112 @@ export class ConfigurationService {
 环境变量验证 The **@nestjs/config** package enables two different ways to do this:
 
 1. Joi built-in validator
+
+```ts
+// usage
+// 下载 Joi
+npm install joi --save
+
+// configuration.module.ts
+import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+import * as Joi from 'joi'
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      validationSchema: Joi.object({
+        NODE_ENV: Joi.string()
+          .valid('development', 'production')
+          .default('development'),
+          // 如果.env文件没有 在项目启动的时候就会报错
+/**
+ * It is standard practice throw an exception during application startup if required environment variables
+ * have not been provided.
+*/
+        DATABASE: Joi.string().required()
+      }),
+      validationOptions: {
+        allowUnknown: false // 是否允许.env文件中存在   不在 schema 中定义的变量
+      }
+    })
+  ]
+})
+```
+
+By default, unknown environment variables are allowed and do not trigger a validation exception.
+
 2. A custom **validate()** function which takes environment variables as an input
+
+You can specify a **synchronous** **validate** function that takes an object containing the environment variables
+and returns ann object containing validated environment variables so that you can convert/mutate
+them if need
+(你可以指定一个同步的 validate 函数 接收一个对象包含环境变量 并且返回一个对象包含 验证的环境变量 这样你可以转换/修改)
+
+```ts
+// .env.validation.ts
+// 以下代码来自官网
+import { plainToInstance } from 'class-transformer'
+import { IsEnum, IsNumber, validateSync } from 'class-validator'
+
+enum Environment {
+  Development = 'development'
+  Production = 'production',
+  Test = 'test',
+  Provision = 'provision'
+}
+
+class EnvironmentVariables {
+  @IsEnum(Environment)
+  NODE_ENV: Environment
+
+  @IsNumber()
+  PORT: number;
+}
+
+// 一个验证函数
+export function validate(config: Record<string, unknown>) {
+  const validatedConfig = plainToInstance(
+    EnvironmentVariables,
+    config,
+    { enableImplicitConversion: true }
+  )
+  const errors = validateSync(validatedConfig, { skipMissingProperties: false })
+  if (errors.length > 0) {
+    throw new Error(errors.toString())
+  }
+  return validatedConfig
+}
+
+// configuration.module.ts
+import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+import { validate } from './env.validation'
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      validate
+    })
+  ]
+})
+```
+
+### Conditional module configuration
+
+There may be times where you want to conditionally load in a module and specify the condition in an
+env variable.
+(可能需要根据条件判断来加载模块 并在 env 文件中 指定条件)
+
+```ts
+@Module({
+  imports: [ConfigModule.forRoot(), ConditionalModule.registerWhen(FooModule, 'USE_FOO')]
+  /**
+   * 当.env文件中 变量USE_FOO为 true时 加载 FooModule 模块。
+  */
+})
+```
+
+也可以传递一个函数 自定义判断条件。该函数接受 **process.env** 对象的引用, 并返回一个布尔值。
 
 ## dotenv
 

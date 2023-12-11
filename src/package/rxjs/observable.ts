@@ -61,6 +61,7 @@ observable_foo.subscribe(y => {
   console.log(y)
 })
 
+// ------------------------ 给subscribe传递一个对象 -----------------------------
 observable_foo.subscribe({
   next (x) {
     console.log('对象:', x)
@@ -70,3 +71,58 @@ observable_foo.subscribe({
   }
 })
 console.log('subscriber after')
+
+
+console.log('-------------------------------- create -------------------------------------')
+const setTimeoutObservable = new Observable(function subscribe(subscriber) {
+  setInterval(() => {
+    subscriber.next('hello')
+  }, 1000)
+})
+
+setTimeoutObservable.subscribe((x) => {
+  console.log(x)
+})
+
+console.log('------------------------------ error ------------------------')
+const error_observable = new Observable(function subscribe (subscriber) {
+  try {
+    subscriber.next(1)
+    // @ts-ignore
+    // subscriber.next(a)
+    subscriber.next(2)
+    subscriber.next(3)
+  } catch (err) {
+    subscriber.error(err)
+  }
+});
+
+error_observable.subscribe({
+  next: function(x) {
+    console.log(x)
+  },
+  error: function(err) { // 捕获未定义的a变量错误, 不影响 上一个observable 的 定时器执行
+    console.log('error111233', err)
+  }
+})
+
+console.log('------------------------------- subscription --------------------------------')
+
+const cancel_observable = new Observable(function subscribe(subscriber) {
+  subscriber.next(1)
+  subscriber.next(2)
+  setInterval(() => {
+    subscriber.next('1500ms interval')
+  }, 1500)
+})
+
+const subscription_1 = cancel_observable.subscribe(x => {
+  console.log('subscription-1:', x)
+})
+
+const subscription_2 = cancel_observable.subscribe(x => {
+  console.log('subscription-2:', x)
+})
+setTimeout(() => {
+  subscription_1.unsubscribe()
+}, 5000)

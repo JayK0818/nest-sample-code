@@ -1,9 +1,10 @@
+<!-- TOC -->autoauto- [1. Nestjs](#1-nestjs)auto  - [1.1. @nestjs/config](#11-nestjsconfig)auto    - [1.1.1. ConfigModule](#111-configmodule)auto    - [1.1.2. ConfigService](#112-configservice)auto    - [1.1.3. Custom env file path](#113-custom-env-file-path)auto    - [1.1.4. Custom configuration files](#114-custom-configuration-files)auto    - [1.1.5. Configuration namespaces](#115-configuration-namespaces)auto    - [1.1.6. Schema validation](#116-schema-validation)auto    - [1.1.7. Conditional module configuration](#117-conditional-module-configuration)auto  - [1.2. dotenv](#12-dotenv)auto    - [1.2.1. Config](#121-config)auto    - [1.2.2. Parsing](#122-parsing)auto  - [1.3. Rxjs](#13-rxjs)auto  - [1.4. Observable](#14-observable)auto    - [1.4.1. Pull and Push](#141-pull-and-push)auto    - [1.4.2. Disposing Observable Executions](#142-disposing-observable-executions)autoauto<!-- /TOC -->
 # Nestjs
 
 ## @nestjs/config
 
 In Node.js applications, it is common to use **.env** files, holding key-value pairs where each key presents a
-particular value, to present each environment. Running an app in different envirionments is then just a matter
+particular value, to present each environment. Running an app in different environments is then just a matter
 of swapping in the correct **.env** file.
 
 ```js
@@ -397,4 +398,74 @@ const observable = new Observable((subscriber) => {
 observable.subscribe((x) => {
   console.log(x); // 1 2
 });
+```
+
+1. Create
+
+  Observable can be created with **new Observable**, Most commonly, observables are created using creation functions, like *of*, *from*...
+```ts
+// Observable execution
+const observable = new Observable(function subscribe(subscriber) {
+  setInterval(() => {
+    subscriber.next('hi')
+  })
+})
+```
+2. Subscribing to Observables
+
+  When calling **observable.subscribe** with an Observer, the function **subscribe** in **new Observable(function subscribe(subscriber){...})**
+  is run for that given subscriber.
+
+```ts
+observable.subscribe((x) => {
+  console.log(x)  // 每隔1秒 输出 hi
+})
+```
+
+3. Execution Observables
+
+```ts
+const observable = new Observable(function subscribe(subscriber) {
+  subscriber.next(1)
+  subscriber.next(2)
+  subscriber.next(3)
+  subscriber.complete()
+  subscriber.next(4) // Is not delivered
+})
+```
+
+### Disposing Observable Executions
+
+  We need an API for canceling an execution. (需要一个API用来取消observable的执行)
+
+```ts
+/**
+ * the subscription represents the ongoing execution. and has a minimal API which allows you to cancel that execution
+ * (subscription 代表当前正在执行的程序, 返回一个mini的API 允许用来取消执行)
+ * */ 
+const subscription = observable.subscribe(x => {
+  console.log(x)
+})
+// subscription.unsubscribe()
+```
+
+```ts
+// 一个demo
+const observable = new Observable(function subscribe (subscriber) {
+  setInterval(() => {
+    subscriber.next(1)
+  }, 1000)
+})
+
+const subscription1 = observable.subscribe(function (x) {
+  console.log(x)
+})
+const subscription2 = observable.subscribe(x => {
+  console.log(x)
+})
+
+// 2s后 第二个observable内的函数还在执行
+setTimeout(() => {
+  subscription1.unsubscribe()
+}, 2000)
 ```

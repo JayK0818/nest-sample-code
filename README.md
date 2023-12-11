@@ -1,4 +1,5 @@
 <!-- TOC -->autoauto- [1. Nestjs](#1-nestjs)auto  - [1.1. @nestjs/config](#11-nestjsconfig)auto    - [1.1.1. ConfigModule](#111-configmodule)auto    - [1.1.2. ConfigService](#112-configservice)auto    - [1.1.3. Custom env file path](#113-custom-env-file-path)auto    - [1.1.4. Custom configuration files](#114-custom-configuration-files)auto    - [1.1.5. Configuration namespaces](#115-configuration-namespaces)auto    - [1.1.6. Schema validation](#116-schema-validation)auto    - [1.1.7. Conditional module configuration](#117-conditional-module-configuration)auto  - [1.2. dotenv](#12-dotenv)auto    - [1.2.1. Config](#121-config)auto    - [1.2.2. Parsing](#122-parsing)auto  - [1.3. Rxjs](#13-rxjs)auto  - [1.4. Observable](#14-observable)auto    - [1.4.1. Pull and Push](#141-pull-and-push)auto    - [1.4.2. Disposing Observable Executions](#142-disposing-observable-executions)autoauto<!-- /TOC -->
+
 # Nestjs
 
 ## @nestjs/config
@@ -402,70 +403,103 @@ observable.subscribe((x) => {
 
 1. Create
 
-  Observable can be created with **new Observable**, Most commonly, observables are created using creation functions, like *of*, *from*...
+Observable can be created with **new Observable**, Most commonly, observables are created using creation functions, like _of_, _from_...
+
 ```ts
 // Observable execution
 const observable = new Observable(function subscribe(subscriber) {
   setInterval(() => {
-    subscriber.next('hi')
-  })
-})
+    subscriber.next('hi');
+  });
+});
 ```
+
 2. Subscribing to Observables
 
-  When calling **observable.subscribe** with an Observer, the function **subscribe** in **new Observable(function subscribe(subscriber){...})**
-  is run for that given subscriber.
+When calling **observable.subscribe** with an Observer, the function **subscribe** in **new Observable(function subscribe(subscriber){...})**
+is run for that given subscriber.
 
 ```ts
 observable.subscribe((x) => {
-  console.log(x)  // 每隔1秒 输出 hi
-})
+  console.log(x); // 每隔1秒 输出 hi
+});
 ```
 
 3. Execution Observables
 
 ```ts
 const observable = new Observable(function subscribe(subscriber) {
-  subscriber.next(1)
-  subscriber.next(2)
-  subscriber.next(3)
-  subscriber.complete()
-  subscriber.next(4) // Is not delivered
-})
+  subscriber.next(1);
+  subscriber.next(2);
+  subscriber.next(3);
+  subscriber.complete();
+  subscriber.next(4); // Is not delivered
+});
 ```
 
 ### Disposing Observable Executions
 
-  We need an API for canceling an execution. (需要一个API用来取消observable的执行)
+We need an API for canceling an execution. (需要一个 API 用来取消 observable 的执行)
 
 ```ts
 /**
  * the subscription represents the ongoing execution. and has a minimal API which allows you to cancel that execution
  * (subscription 代表当前正在执行的程序, 返回一个mini的API 允许用来取消执行)
- * */ 
-const subscription = observable.subscribe(x => {
-  console.log(x)
-})
+ * */
+const subscription = observable.subscribe((x) => {
+  console.log(x);
+});
 // subscription.unsubscribe()
 ```
 
 ```ts
 // 一个demo
-const observable = new Observable(function subscribe (subscriber) {
+const observable = new Observable(function subscribe(subscriber) {
   setInterval(() => {
-    subscriber.next(1)
-  }, 1000)
-})
+    subscriber.next(1);
+  }, 1000);
+});
 
 const subscription1 = observable.subscribe(function (x) {
-  console.log(x)
-})
-const subscription2 = observable.subscribe(x => {
-  console.log(x)
-})
+  console.log(x);
+});
+const subscription2 = observable.subscribe((x) => {
+  console.log(x);
+});
 
 // 2s后 第二个observable内的函数还在执行
 setTimeout(() => {
-  subscription1.unsubscribe()
-}, 2000)
+  subscription1.unsubscribe();
+}, 2000);
 ```
+
+## Observer
+
+An Observer is a consumer of values delivered by an Observable. Observers are simply a set of callbacks.
+
+```ts
+const observer = {
+  next: (x) => console.log('observer got a next value:', x),
+  error: (err) => console.log(err),
+  complete: () => console.log('completed'),
+};
+```
+
+To use the Observer, provide it to the subscribe of an Observable. (使用 observer, 将它传递给 subscribe 函数)。
+
+## Operators
+
+Operators are functions.
+
+1. **Pipeable Operators**
+   用法 observableInstance.pipe(operator) / observableInstance.pipe(operatorFactory())
+   A pipeable Operator is essentially a pure function which takes one Observable as input and generates another
+   Observable as output.
+   (管道操作符是一个纯函数,接受一个 observable 作为参数 并且生成另一个 observable 作为输出)。
+
+   A Pipeable Operator Factory is a function that can take parameters to set the context and return a Pipeable
+   Operator.
+
+2. **Creation Operators**
+
+Creation operators are functions that can be used to create an Observable with some common predefined behavior or by joining other Observables

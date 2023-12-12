@@ -503,3 +503,89 @@ Operators are functions.
 2. **Creation Operators**
 
 Creation operators are functions that can be used to create an Observable with some common predefined behavior or by joining other Observables
+
+2.1 from: Creates an Observable from an Array, an array-like object, a Promise, an iterable object...
+
+```ts
+// demo
+
+// array
+const array_from = from([1, 2, 3]);
+array_from.subscribe((x) => {
+  console.log('array:', x); // 1, 2, 3
+});
+
+// array-like object
+const object_from = from({
+  0: 'hello',
+  1: 'world',
+  2: 'hello world',
+  length: 3,
+});
+object_from.subscribe((x) => {
+  console.log('object:', x); // hello, world, hello world
+});
+
+// 类数组
+function foo(a: number, b: number): void {
+  console.log(a, b);
+  const arguments_from = from(arguments);
+  arguments_from.subscribe((x) => {
+    console.log('argument:', x); // 1 2
+  });
+}
+foo(1, 2);
+
+// 字符串
+from('hello').subscribe({
+  next: (v) => {
+    console.log('string:', v);
+    // h, e, l, l, o
+  },
+});
+```
+
+2.2 interval: Create an Observable that emits sequential numbers every specified interval of time.
+
+```ts
+import { take, interval } from 'rxjs';
+
+const numbers = interval(1000);
+numbers.pipe(take(4)).subscribe((x) => {
+  console.log('interval:', x); // 0,1,2,3
+});
+```
+
+2.3 of: Converts the arguments to an observable sequence.
+
+```ts
+of(10, 20, 30).subscribe({
+  next: (v) => {
+    console.log('off-v:', v); // 10, 20, 30
+  },
+  complete: () => {
+    console.log('off-complete:');
+  },
+});
+
+of(['hello', 'world', 'hello world']).subscribe({
+  next: (v) => {
+    console.log('of-array:', v); // [ 'hello', 'world', 'hello world' ]
+  },
+  complete: () => {
+    console.log('complete');
+  },
+});
+
+of({ 0: '你好', 1: '生活', length: 2 }).subscribe({
+  next: (v) => {
+    console.log('of-object:', v);
+  },
+  complete: () => {
+    console.log('of-object-complete');
+    // { '0': '你好', '1': '生活', length: 2 }
+  },
+});
+```
+
+2.4 range: Creates an Observable that emits a sequence of numbers within a specified range.

@@ -483,6 +483,20 @@ const observer = {
   error: (err) => console.log(err),
   complete: () => console.log('completed'),
 };
+
+// demo
+(function () {
+  function subscribe(subscriber) {
+    const id = setInterval(() => {
+      subscriber.next('原生js');
+    }, 1200);
+    return function ubsubscribe() {
+      window.clearInterval(id);
+    };
+  }
+  const unsubscribe = subscribe({ next: (x) => console.log(x) });
+  unsubscribe();
+})();
 ```
 
 To use the Observer, provide it to the subscribe of an Observable. (使用 observer, 将它传递给 subscribe 函数)。
@@ -589,3 +603,12 @@ of({ 0: '你好', 1: '生活', length: 2 }).subscribe({
 ```
 
 2.4 range: Creates an Observable that emits a sequence of numbers within a specified range.
+
+```ts
+range(10, 5).subscribe({
+  next: (v) => {
+    console.log('range:', v);
+    // 10 11 12 13 14
+  },
+});
+```

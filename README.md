@@ -336,7 +336,7 @@ console.log(config, typeof config);
 
 Rxjs is a library for composing asynchronous and event-based programs by using observable sequences.
 
-## Observable
+### Observable
 
 Observables are lazy push collections of multiple values (可观测对象是多个值的延迟集合)
 
@@ -473,7 +473,7 @@ setTimeout(() => {
 }, 2000);
 ```
 
-## Observer
+### Observer
 
 An Observer is a consumer of values delivered by an Observable. Observers are simply a set of callbacks.
 
@@ -501,7 +501,7 @@ const observer = {
 
 To use the Observer, provide it to the subscribe of an Observable. (使用 observer, 将它传递给 subscribe 函数)。
 
-## Operators
+### Operators
 
 Operators are functions.
 
@@ -611,4 +611,47 @@ range(10, 5).subscribe({
     // 10 11 12 13 14
   },
 });
+```
+
+2.5: concat Creates an output Observable with sequentially emits all values from the first given Observable
+and then moves on to the next.
+
+```ts
+const timer = interval(1000).pipe(take(4));
+const sequence = range(1, 10);
+
+concat(timer, sequence).subscribe((x) => {
+  console.log(x); // 0 1 2 3 (间隔1s)输出, 然后输出1-10
+});
+
+concat(
+  interval(1000).pipe(take(10)),
+  interval(2000).pipe(take(3)),
+  interval(500).pipe(take(5)),
+).subscribe((x) => {
+  console.log(x);
+});
+```
+
+### Subscription
+
+A subscription is an object that represents a disposable resource. Usually the execution of an Observable.
+A subscription has one important method, **unsubscribe**.
+
+```ts
+import { interval } from 'rxjs';
+const observable = interval(1000);
+const subscription = observable.subscribe((x) => console.log(x));
+
+subscription.unsubscribe();
+
+// 取消多个资源订阅
+const o1 = interval(400);
+const o2 = interval(300);
+const subscription = o1.subscribe((x) => console.log(x));
+const child_subscription = o2.subscribe((x) => console.log(x));
+
+subscription.add(child_subscription);
+
+subscription.unsubscribe();
 ```

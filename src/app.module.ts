@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PlayerController } from './controller/player.controller';
@@ -11,6 +12,7 @@ import { ExceptionModule } from './exception/exception.module';
 import { PipeModule } from './pipe/pipe.module';
 import { GuardModule } from './guards/guards.module';
 import { ConfigurationModule } from './configuration/configuration.module';
+import { DatabaseModule } from './database/database.module';
 @Module({
   imports: [
     CatsModule,
@@ -22,6 +24,8 @@ import { ConfigurationModule } from './configuration/configuration.module';
     PipeModule,
     GuardModule,
     ConfigurationModule,
+    DatabaseModule,
+    MongooseModule.forRoot('mongodb://locahost/nest'),
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

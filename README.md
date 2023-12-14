@@ -655,3 +655,41 @@ subscription.add(child_subscription);
 
 subscription.unsubscribe();
 ```
+
+### Subject
+
+An Rxjs Subject is a special type of Observable that allows values to be multicasted to many Observers.
+(rxjs subject 是一个特殊的 Observable 类型 允许对值进行多播)。
+A **Subject** is like an Observable, but can multicast to many Observers. **Subjects** are like **EventEmitters**
+they maintain a registry of many listeners.
+
+```ts
+import { Subject } from 'rxjs';
+
+const subject = new Subject();
+subject.subscribe({
+  next: (v) => {
+    console.log('observerA:', v);
+  },
+});
+subject.subscribe({
+  next: (v) => {
+    console.log('observerB:', v);
+  },
+});
+
+subject.next(1);
+subject.next(2);
+
+subject.subscribe({
+  next: (v) => {
+    console.log('observerC:', v);
+  },
+});
+/**
+ * observerA: 1
+  observerB: 1
+  observerA: 2
+  observerB: 2
+*/
+```

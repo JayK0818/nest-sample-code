@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { DatabaseController } from './database.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Player, PlayerSchema } from './schema/player.schema';
-import { AccountSchema } from './schema/account.schema';
+// import { AccountSchema } from './schema/account.schema';
 import { DatabaseService } from './database.service';
 
 @Module({
@@ -11,10 +11,6 @@ import { DatabaseService } from './database.service';
       {
         name: Player.name,
         schema: PlayerSchema,
-      },
-      {
-        name: 'account',
-        schema: AccountSchema,
       },
     ]),
   ],

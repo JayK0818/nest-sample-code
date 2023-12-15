@@ -25,7 +25,7 @@ import { DatabaseModule } from './database/database.module';
     GuardModule,
     ConfigurationModule,
     DatabaseModule,
-    MongooseModule.forRoot('mongodb://locahost/nest'),
+    MongooseModule.forRoot('mongodb://127.0.0.1:27017/test'),
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

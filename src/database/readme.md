@@ -65,4 +65,21 @@ import { CatSchema, Cat } from './cat.schema'
     }
   ])]
 })
+
+// cat.service.ts
+// 最后在 CatService中注入 Cat model 使用 @InjectModel()
+
+import { Model } from 'mongoose'
+import { Injectable } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import { Cat } from './schema/cat.schema'
+
+@Injectable()
+export class CatService {
+  constructor(@InjectModel(Cat.name) private catModel: Model<Cat>) {}
+  async create(createCatDto: CreateCatDto): Promise<Cat> {
+    const d = new this.catModel(createdCatDto)
+    return d.save()
+  }
+}
 ```

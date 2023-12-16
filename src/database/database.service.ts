@@ -18,13 +18,15 @@ export class DatabaseService {
   async createAccount(data: any) {
     // 此方法 暂未保存成功, 显示超时
     console.log('接受的数据', data);
-    Account.create(data)
+    const account = new Account(data);
+    await account.save();
+    /*     Account.create(data)
       .then((res) => {
         console.log('res', res);
       })
       .catch((err) => {
         console.log(err);
-      });
+      }); */
     return 'hello world';
   }
 }

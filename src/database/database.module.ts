@@ -6,11 +6,34 @@ import { Player, PlayerSchema } from './schema/player.schema';
 import { DatabaseService } from './database.service';
 
 @Module({
-  imports: [
+  /*   imports: [
     MongooseModule.forFeature([
       {
         name: Player.name,
         schema: PlayerSchema,
+      },
+    ]),
+  ], */
+  imports: [
+    /*     MongooseModule.forFeature([
+      {
+        name: Player.name,
+        schema: PlayerSchema,
+      },
+    ]), */
+    MongooseModule.forFeatureAsync([
+      {
+        name: Player.name,
+        useFactory: () => {
+          const schema = PlayerSchema;
+          /*           schema.pre('save', function () {
+            console.log('hello from pre save');
+          }); */
+          schema.post('save', () => {
+            console.log('hello from 111 save');
+          });
+          return schema;
+        },
       },
     ]),
   ],

@@ -122,3 +122,35 @@ each table.
 1. One-to-one: use the **@OneToOne()** decorator.
 2. One-to-many/Many-to-one: use the **OneToMany()** and **@ManyToOne()** decorators.
 3. Many-to-many: use the **@ManyToMany()** decorator
+
+以下是一个 one-to-one 的例子, 每个用户对应一个 他自己的用户资料表, 并且一个用户资料文件仅由一个用户拥有。
+
+```ts
+// 以下demo 来自于 typeorm 中文官网
+// https://typeorm.biunav.com/zh/one-to-one-relations.html
+
+// user.entity.ts
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+  OneToOne,
+} from '@nestjs/typeorm';
+import { Profile } from './profile.entity';
+
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  firstName: string;
+
+  @OneToOne(Profile)
+  @JoinColumn()
+  profile: Profile;
+}
+```
+
+**@JoinColumn()** 只能在关系的一侧设置(且必须在数据库表中具有外键的一侧)。另一个表将包含一个 **relation id** 和目标实体表的外键。

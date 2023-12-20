@@ -11,12 +11,15 @@ import { MiddlewareModule } from './middleware/middleware.module';
 import { ExceptionModule } from './exception/exception.module';
 import { PipeModule } from './pipe/pipe.module';
 import { GuardModule } from './guards/guards.module';
-import { OrmModule } from './orm/orm.module';
 // import { ConfigurationModule } from './configuration/configuration.module';
 // import { DatabaseModule } from './database/database.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './orm/entity/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+// 此为 orm 下的两个模块 用于测试mysql
+import { UserModule } from './orm/user/user.module';
+import { ProfileModule } from './orm/profile/profile.module';
+import { UserEntity } from './orm/entity/user.entity';
+import { ProfileEntity } from './orm/entity/profile.entity';
 
 @Module({
   imports: [
@@ -28,7 +31,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ExceptionModule,
     PipeModule,
     GuardModule,
-    OrmModule,
     ConfigModule.forRoot(),
     // ConfigurationModule,
     /*     TypeOrmModule.forRoot({
@@ -50,10 +52,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           password: '15209891396kyrie',
           database: 'nest',
           synchronize: true,
-          entities: [User],
+          entities: [UserEntity, ProfileEntity],
         };
       },
     }),
+    UserModule,
+    ProfileModule,
     // DatabaseModule,
     // MongooseModule.forRoot('mongodb://127.0.0.1:27017/test'),
   ],

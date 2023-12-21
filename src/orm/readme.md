@@ -20,7 +20,9 @@ import { Module } from '@nestjs/common'
       host: 'localhost:3000',
       port: '27017',
       username: 'hello',
-      password: 'world'
+      password: 'world',
+      entities: [User, Profile],
+      autoLoadEntites: true // automatically load entites.
     })
   ]
 })
@@ -41,6 +43,10 @@ import { Module } from '@nestjs/common'
   ]
 })
 ```
+
+With the option specified, every entity registered through the **forFeature()** method will be automatically
+add to the **entities** array of the configuration object.
+(指定了 autoLoadEntities 属性, 每个在 forFeature()方法中注册的实体将会自动添加到 配置文件的 entities 数组中)
 
 ## Entity
 
@@ -148,9 +154,45 @@ export class User {
   firstName: string;
 
   @OneToOne(Profile)
-  @JoinColumn()
+  @JoinColumn({ name: 'profile_id' }) // 可以定义关联的id名称
   profile: Profile;
 }
 ```
 
 **@JoinColumn()** 只能在关系的一侧设置(且必须在数据库表中具有外键的一侧)。另一个表将包含一个 **relation id** 和目标实体表的外键。
+
+## Subscriber
+
+With TypeORM **subscribers**, you can listen to specific entity events.
+(通过使用 subscribers, 可以监听特定的实体事件)
+
+以下代码 copy 自官网
+
+```ts
+import {
+  DataSource,
+  EntitySubscriberInterface,
+  EventSubscriber,
+  InsertEvent,
+} from 'typeorm';
+import { User } from './user.entity';
+
+@EventSubscriber()
+export class UserSubscriber implements EntitySubscriberInterface<User> {
+  constructor(dataSource: DataSource) {
+    dataSource.subscribers.push(this);
+  }
+  listenTo() {
+    return User;
+  }
+  beforeInsert(event: InsertEvent<User>) {
+    console.log(`BEFORE USER INSERTED: `, event.entity);
+  }
+}
+
+// user.module.ts
+import { UserSubscriber } from './user.subscriber';
+@Module({
+  providers: [UserSubscriber]
+})
+```

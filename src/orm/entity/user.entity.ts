@@ -5,10 +5,10 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { ProfileEntity } from './profile.entity';
+import { Profile } from './profile.entity';
 
 @Entity()
-export class UserEntity {
+export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,7 +21,7 @@ export class UserEntity {
   @Column()
   password: string;
 
-  @OneToOne(() => ProfileEntity)
-  @JoinColumn()
-  profile: ProfileEntity;
+  @OneToOne(() => Profile)
+  @JoinColumn({ name: 'profile_id', referencedColumnName: 'id' })
+  profile: Profile;
 }

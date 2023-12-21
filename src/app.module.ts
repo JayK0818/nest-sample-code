@@ -18,8 +18,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 // 此为 orm 下的两个模块 用于测试mysql
 import { UserModule } from './orm/user/user.module';
 import { ProfileModule } from './orm/profile/profile.module';
-import { UserEntity } from './orm/entity/user.entity';
-import { ProfileEntity } from './orm/entity/profile.entity';
+import { User } from './orm/entity/user.entity';
+import { Profile } from './orm/entity/profile.entity';
 
 @Module({
   imports: [
@@ -52,7 +52,7 @@ import { ProfileEntity } from './orm/entity/profile.entity';
           password: '15209891396kyrie',
           database: 'nest',
           synchronize: true,
-          entities: [UserEntity, ProfileEntity],
+          entities: [User, Profile],
         };
       },
     }),

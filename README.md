@@ -1,5 +1,3 @@
-<!-- TOC -->autoauto- [1. Nestjs](#1-nestjs)auto  - [1.1. @nestjs/config](#11-nestjsconfig)auto    - [1.1.1. ConfigModule](#111-configmodule)auto    - [1.1.2. ConfigService](#112-configservice)auto    - [1.1.3. Custom env file path](#113-custom-env-file-path)auto    - [1.1.4. Custom configuration files](#114-custom-configuration-files)auto    - [1.1.5. Configuration namespaces](#115-configuration-namespaces)auto    - [1.1.6. Schema validation](#116-schema-validation)auto    - [1.1.7. Conditional module configuration](#117-conditional-module-configuration)auto  - [1.2. dotenv](#12-dotenv)auto    - [1.2.1. Config](#121-config)auto    - [1.2.2. Parsing](#122-parsing)auto  - [1.3. Rxjs](#13-rxjs)auto  - [1.4. Observable](#14-observable)auto    - [1.4.1. Pull and Push](#141-pull-and-push)auto    - [1.4.2. Disposing Observable Executions](#142-disposing-observable-executions)autoauto<!-- /TOC -->
-
 # Nestjs
 
 ## @nestjs/config

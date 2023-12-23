@@ -1,8 +1,7 @@
-import { Module } from '@nestjs/common'
-import { PipeController } from './pipe.controller'
+import { Module } from '@nestjs/common';
+import { PipeController } from './pipe.controller';
 
 @Module({
-  controllers: [PipeController]
+  controllers: [PipeController],
 })
-
 export class PipeModule {}

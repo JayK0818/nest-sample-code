@@ -691,3 +691,87 @@ subject.subscribe({
   observerB: 2
 */
 ```
+
+## Logger
+
+日志打印功能
+
+## pino
+
+Very low overhead Node.js logger
+
+```js
+// usage with pino
+npm install nestjs-pino pino-http
+
+
+// usage
+// user.module.ts
+import { LoggerModule } from 'nestjs-pino'
+@Module({
+  imports: [LoggerModule.forRoot()]
+})
+
+// user.controller.ts
+import { Logger } from 'nestjs-pino'
+@Controller()
+export class UserController {
+  constructor(private logger: Logger) {}
+
+  @Get('user-list')
+  GetUserList() {
+    return ['hello', 'world']
+  }
+}
+/**
+ * {"level":30,"time":1703338201945,"pid":2738,"hostname":"jinkangdeAir","req":{"id":1,"method":"GET","url":"/api/v1/logger/logger-list","query":{},"params":{"0":"logger/logger-list"},"headers":{"host":"localhost:3000","connection":"keep-alive","cache-control":"max-age=0","sec-ch-ua":"\"Not_A Brand\";v=\"8\", \"Chromium\";v=\"120\", _15_7) AppleWebKit/537.36 plication/xml;q=0.9,image/avif,image/webp,image/apng,*........ (省略)
+ *
+*/
+// 访问接口时 控制台打印数据 如上所示
+```
+
+1. log in JSON format
+2. log every request/response automatically (thanks to pino-http)
+
+## pino-pretty
+
+This module provides a basic **ndjson** formatter to be used in development. (用来在开发环境中对日志格式进行格式化)
+
+```ts
+@Module({
+  imports: [
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: {
+          target: 'pino-pretty' // 格式化输出的json
+        }
+      }
+    })
+  ]
+})
+```
+
+## pino-roll
+
+A pino transport that automatically rolls your log files
+
+```js
+npm install pino-roll
+
+@Module({
+  imports: [
+    LoggerModule.forRoot({
+      pinoHttp: {
+        target: 'pino-roll',
+        options: {
+          frequency: 'daily',
+          mkdir: true
+        }
+      }
+    })
+  ]
+})
+```
+
+[nestjs-pino](https://www.npmjs.com/package/nestjs-pino)
+[pino-roll](https://www.npmjs.com/package/pino-roll)

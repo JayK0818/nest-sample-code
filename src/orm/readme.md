@@ -23,6 +23,12 @@ import { Module } from '@nestjs/common'
       password: 'world',
       entities: [User, Profile],
       autoLoadEntites: true // automatically load entites.
+    }),
+    // 连接多个数据库
+    TypeOrmModule.forRoot({
+      name: 'albumsConnection', // 同时连接多个数据库需要设置name属性
+      host: 'album_db_host',
+      entites: [Album]
     })
   ]
 })
@@ -98,6 +104,8 @@ import { User } from './users/user.entity';
    * This module uses the **forFeature() to define which repositories are registered in the current scope.**
   */
   imports: [TypeOrmModule.forFeature([User])],
+  // 连接多个数据库时需要指定 使用哪个资源库
+  imports: [TypeOrmModule.forFeature([Album], 'albumsConnection')]
   providers: [UserService],
   controllers: [UserController]
 })

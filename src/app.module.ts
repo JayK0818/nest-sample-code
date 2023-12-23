@@ -20,10 +20,12 @@ import { UserModule } from './orm/user/user.module';
 import { ProfileModule } from './orm/profile/profile.module';
 import { User } from './orm/entity/user.entity';
 import { Profile } from './orm/entity/profile.entity';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
     CatsModule,
+    LoggerModule,
     BookModule,
     AuthModule,
     MenuModule,

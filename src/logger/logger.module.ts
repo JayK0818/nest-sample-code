@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { LoggerController } from './logger.controller';
 import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
+import { LoggerService } from './logger.service';
 import { join } from 'path';
 
 @Module({
+  providers: [LoggerService],
   controllers: [LoggerController],
   imports: [
     PinoLoggerModule.forRoot({

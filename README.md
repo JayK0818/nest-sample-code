@@ -773,5 +773,74 @@ npm install pino-roll
 })
 ```
 
+## winston
+
+A logger fot just about everything. **winston** is designed to be a simple and universal logging library with support for multiple transports. Each **winston** logger can have multiple tansports configured at default levels.
+
+```js
+// creating your own logger
+const logger = winston.createLogger({
+  level: 'info', // 默认 info
+  format: winston.format.json(), // 格式化为json
+  transports: [
+    new winston.transports.Console(), // 每次请求自动console日志
+    new winston.transports.File({
+      filename: 'log.txt', // 输出日志的文件名
+      level: 'error',
+    }),
+  ],
+});
+```
+
+## nestjs-winston
+
+A nest module wrapper for winston logger.
+
+```js
+import { WinstonModule } from 'nestjs-winston';
+import * as winston from 'winston';
+
+@Module({
+  imports: [
+    WinstonModule.forRoot({}) // this method accept the same options object as **createLogger()**
+    // function from the winston package.
+  ]
+})
+```
+
+1. Replacing the Nest logger
+
+```ts
+import { WinstonModule } from 'nest-winston';
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule, {
+    logger: WinstonModule.createLogger({
+      // options (same as WinstonModule.forRoot() options)
+    }),
+  });
+}
+```
+
+## winston-daily-rotate-file
+
+A transport for **winston** which logs to a rotating file. Logs can be rotated based on a date, size limit,
+and old logs can be removed based on count or elapsed days.
+
+```js
+// install
+npm install winston-daily-rotate-file --save
+
+// usage
+new winston.transports.DailyRotateFile({
+  filename: 'application-%DATE%.log',
+  datePattern: 'YYYY-MM-DD-HH',
+  zippedArchive: true,
+  maxSize: '20m',
+  maxFiles: '14d'
+})
+```
+
 [nestjs-pino](https://www.npmjs.com/package/nestjs-pino)
 [pino-roll](https://www.npmjs.com/package/pino-roll)
+[winston](https://www.npmjs.com/package/winston)
+[winston-daily-rotate-file](https://www.npmjs.com/package/winston-daily-rotate-file)

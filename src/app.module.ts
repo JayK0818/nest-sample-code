@@ -21,7 +21,13 @@ import { ProfileModule } from './orm/profile/profile.module';
 import { User } from './orm/entity/user.entity';
 import { Profile } from './orm/entity/profile.entity';
 import { LoggerModule } from './logger/logger.module';
-
+import { WinstonModule } from 'nest-winston';
+// logger
+/* import * as winston from 'winston';
+import {
+  WinstonModule,
+  utilities as nestWinstonModuleUtilities,
+} from 'nest-winston'; */
 @Module({
   imports: [
     CatsModule,
@@ -60,8 +66,29 @@ import { LoggerModule } from './logger/logger.module';
     }),
     UserModule,
     ProfileModule,
+    /*     WinstonModule.forRoot({
+      level: 'error',
+      transports: [
+        new winston.transports.Console({
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.label({ label: 'hello message' }),
+            winston.format.colorize(),
+            nestWinstonModuleUtilities.format.nestLike('MyApp', {
+              colors: true,
+              prettyPrint: true,
+            }),
+          ),
+        }),
+        new winston.transports.File({
+          filename: 'log.txt',
+          level: 'error',
+        }),
+      ],
+    }), */
     // DatabaseModule,
     // MongooseModule.forRoot('mongodb://127.0.0.1:27017/test'),
+    WinstonModule.forRoot({}),
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

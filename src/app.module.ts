@@ -22,6 +22,7 @@ import { User } from './orm/entity/user.entity';
 import { Profile } from './orm/entity/profile.entity';
 import { LoggerModule } from './logger/logger.module';
 import { WinstonModule } from 'nest-winston';
+import { InterceptorModule } from './interceptors/interceptor.module';
 // logger
 /* import * as winston from 'winston';
 import {
@@ -89,6 +90,7 @@ import {
     // DatabaseModule,
     // MongooseModule.forRoot('mongodb://127.0.0.1:27017/test'),
     WinstonModule.forRoot({}),
+    InterceptorModule,
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

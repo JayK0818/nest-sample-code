@@ -611,7 +611,7 @@ range(10, 5).subscribe({
 });
 ```
 
-2.5: concat Creates an output Observable with sequentially emits all values from the first given Observable
+2.5: concat: Creates an output Observable with sequentially emits all values from the first given Observable
 and then moves on to the next.
 
 ```ts
@@ -630,6 +630,22 @@ concat(
   console.log(x);
 });
 ```
+
+2.6 tap: Used to peform **side-effects** for notifications from the source observable.
+
+The most common use of tap is actually for debugging. You can place a tap anywhere in your observable pipe, log out the notifications as they are emitted by the source returned by the previous operation.
+(最常见的用途是调试, 你可以在任何地方放置一个 **tap**, 输出前一个操作符触发的通知)
+
+```ts
+of(Math.random()).pipe(
+  tap(console.log),
+  map((n) => (n > 0.5 ? 'big' : 'small')),
+);
+// 在数据输出之前 查看n的值
+```
+
+2.7 map: Applies a given **project** function to each value emitted by the source Observable, and emits the
+resulting values as an Observable (对每个值应用给定的函数, 并将结果返回。)
 
 ### Subscription
 

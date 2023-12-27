@@ -99,3 +99,54 @@ export class TransformInterceptor implements NestInterceptor {
   }
 }
 ```
+
+## Exception mapping
+
+拦截异常并返回响应
+
+```ts
+import {
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+  Injectable,
+} from '@nestjs/common';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+@Injectable()
+export class ErrorInterceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, next: CallHandler) {
+    return next
+      .handle()
+      .pipe(catchError(() => throwError(() => new BadGatewayException())));
+  }
+}
+```
+
+## Stream overriding
+
+There are serval reasons why we may sometimes want to completely prevent calling the handler and
+return a different value instead. (有时需要完全替换返回值 避免路由方法执行)
+
+```ts
+// cache.interceptor (这是一段硬编码代码)
+import {
+  NestInterceptor,
+  CallHandler,
+  Injectable,
+  ExecutionContext,
+} from '@nestjs/common';
+import { of } from 'rxjs';
+
+@Injectable()
+export class CacheInterceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, next: CallHandler) {
+    if (false) {
+      // the route handler will not be called at all
+      return of(1, 2, 3);
+    }
+    return next.handle();
+  }
+}
+```

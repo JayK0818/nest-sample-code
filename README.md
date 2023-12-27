@@ -647,6 +647,75 @@ of(Math.random()).pipe(
 2.7 map: Applies a given **project** function to each value emitted by the source Observable, and emits the
 resulting values as an Observable (对每个值应用给定的函数, 并将结果返回。)
 
+2.8 throwError: create an observable that will create an error instance and push it to the consumer as an
+error immediately upon subscription. (创建一个错误的实例 并且在订阅时推送给消费者)
+
+```ts
+throwError(() => {
+  const error = new Error('something went wrong');
+  return error;
+});
+```
+
+2.9 catchError: catches errors on the observable to be handled by returning a new observable or throwing an error.
+
+```ts
+of(1, 2, 3, 4, 5)
+  .pipe(
+    map((n) => {
+      if (n == 3) {
+        throw 'three';
+      }
+      return n;
+    }),
+  )
+  .subscribe({
+    next: (v) => {
+      console.log('next-value:', v);
+    },
+    error: (v) => {
+      console.log('error', v);
+    },
+  });
+// 以上案例在 map抛出异常 在监听时通过 error 函数捕获异常
+
+// 下面的代码未捕获异常
+of(1, 2, 3)
+  .pipe(
+    map((n) => {
+      if (n === 2) {
+        throw new Error('something went wrong');
+      }
+      return n;
+    }),
+  )
+  .subscribe({
+    next: (v) => {
+      console.log(v);
+    },
+  });
+
+of(1, 2, 3, 4, 5)
+  .pipe(
+    map((n) => {
+      if (n === 3) {
+        throw new Error('something went wrong');
+      }
+      return n;
+    }),
+    catchError(() => of()),
+  )
+  .subscribe({
+    next: (v) => {
+      console.log(v);
+    },
+    // catchError已捕获错误, 所以error函数没有输出错误
+    error: (v) => {
+      console.log('errrrrr', v);
+    },
+  });
+```
+
 ### Subscription
 
 A subscription is an object that represents a disposable resource. Usually the execution of an Observable.

@@ -136,7 +136,7 @@ transform() 方法 接受两个参数
 1. value
    The value parameter is the currently processed method argument (before it is received by the route handling method)
 2. metadata
-   参数的 metadata
+   The metadata is the currently processed method arguments'metadata.
 
 ```ts
 {
@@ -148,6 +148,47 @@ transform() 方法 接受两个参数
 
 type 表示获取参数使用的 装饰器的 类别, data 表示传递给 装饰器里的 字符串。metadata 表示在路由方法 标注的 参数类型。比如: String (如果省略了
 参数类型 或者 使用的是 JavaScript, metadata 为 undefined)。
+
+```ts
+// custom.decorator.ts
+// 一个自定义的 custom
+import { Injectable, createParamDecorator, ExecutionContext } from '@nestjs/common'
+
+@Injectable()
+export const ExtraParameter = createParamDecorator(
+  (data: any, context: ExecutionContext) => {
+    const ctx = context.switchToHttp()
+    const request = ctx.getRequest()
+    return request.headers
+  }
+)
+
+// 在pipe-validation中使用自定义decorator
+// pipe.validation.ts
+import { Injectable, PipeTransform, ArgumentMetadata } from '@nestjs/common'
+@Injectable()
+export class CustomPipeValidation implements PipeTransform {
+  transform(value: any, metadata: ArgumentMetadata) {
+    console.log(metadata)
+    /**
+     * {
+     *    type: 'custom'
+     * }
+    */
+    return value
+  }
+}
+
+// cat.controller.ts
+import { Controller } from '@nestjs/common'
+@Controller()
+export class CatController {
+  @Get('/:id')
+  findCat(@CustomPipeValidation('id', new ExtraParameter()) id: number) {
+    return 'hello'
+  }
+}
+```
 
 ## Schema based validation
 

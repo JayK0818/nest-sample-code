@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { User, ExtraParameter } from './custom-decorator';
+import { CustomParseIntPipe } from './parseIntPipe';
 
 @Controller('custom-decorator')
 export class CustomDecoratorController {
@@ -12,5 +13,13 @@ export class CustomDecoratorController {
   getPlayerList(@ExtraParameter('url') headers: any) {
     console.log(headers);
     return ['james', 'kyrie'];
+  }
+  @Get('player/:id')
+  /*   findPlayer(@User(new CustomParseIntPipe()) user) {
+    console.log(user);
+    return 'kyrie';
+  } */
+  findPlayer(@ExtraParameter('url', new CustomParseIntPipe()) user) {
+    console.log(user);
   }
 }

@@ -24,6 +24,7 @@ import { LoggerModule } from './logger/logger.module';
 import { WinstonModule } from 'nest-winston';
 import { InterceptorModule } from './interceptors/interceptor.module';
 import { CustomDecoratorModule } from './custom-decorator/decorator.module';
+import { CustomProviderModule } from './custom-providers/cats.module';
 // logger
 /* import * as winston from 'winston';
 import {
@@ -93,6 +94,7 @@ import {
     WinstonModule.forRoot({}),
     InterceptorModule,
     CustomDecoratorModule,
+    CustomProviderModule,
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

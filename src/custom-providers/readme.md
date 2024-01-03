@@ -111,3 +111,19 @@ the value returned from a factory function. (useFactory 语法允许你动态创
   ]
 })
 ```
+
+Asynchronous providers
+
+```ts
+@Module({
+  providers: [
+    {
+      provide: 'ASYNC_CONNETION',
+      useFactory: async () => {
+        const connection = await createConnection(options)
+        return connection
+      }
+    }
+  ]
+})
+```

@@ -11,6 +11,8 @@ import { MiddlewareModule } from './middleware/middleware.module';
 import { ExceptionModule } from './exception/exception.module';
 import { PipeModule } from './pipe/pipe.module';
 import { GuardModule } from './guards/guards.module';
+import { UserModule as DynamicModuleUserModule } from './dynamic-module/user/user.module';
+import { AuthModule as DynamicModuleAuthModule } from './dynamic-module/auth/auth.module';
 // import { ConfigurationModule } from './configuration/configuration.module';
 // import { DatabaseModule } from './database/database.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -94,7 +96,9 @@ import {
     WinstonModule.forRoot({}),
     InterceptorModule,
     CustomDecoratorModule,
-    CustomProviderModule,
+    // CustomProviderModule,
+    DynamicModuleUserModule,
+    DynamicModuleAuthModule,
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

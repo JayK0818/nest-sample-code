@@ -3,7 +3,7 @@ import { CustomProviderCatService } from './cats.service';
 import { CustomProviderController } from './cats.controller';
 // import { CatsMockService } from './cats-mock.service';
 import { DevelopmentCatService } from './cats.development.service';
-import { PlayerObject } from './no-class-object';
+import { playerObjet } from './player-object';
 
 /* const CatsMockService = {
   getPlayerList() {
@@ -63,14 +63,4 @@ import { PlayerObject } from './no-class-object';
   ],
 }) */
 
-@Module({
-  controllers: [CustomProviderController],
-  providers: [
-    CustomProviderCatService,
-    /*     {
-      provide: 'cat_service',
-      useValue: PlayerObject,
-    }, */
-  ],
-})
 export class CustomProviderModule {}

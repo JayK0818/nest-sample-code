@@ -57,5 +57,5 @@ getUserList (@User('username') name: string) {
 }
 ```
 
-createParamDecorator<T>() 是一个泛型。可以强制执行参数的类型, **createParamDecorator<string>()** 或者
+createParamDecorator<T>() 是一个泛型。可以指定执行参数的类型, **createParamDecorator<string>()** 或者
 **createParamDecorator<(data: string, context: ExecutionContext) => {}>**, 如果都没有指定, data 类型是 any.

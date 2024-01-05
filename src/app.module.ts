@@ -15,24 +15,26 @@ import { UserModule as DynamicModuleUserModule } from './dynamic-module/user/use
 import { AuthModule as DynamicModuleAuthModule } from './dynamic-module/auth/auth.module';
 // import { ConfigurationModule } from './configuration/configuration.module';
 // import { DatabaseModule } from './database/database.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
+// import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 // 此为 orm 下的两个模块 用于测试mysql
-import { UserModule } from './orm/user/user.module';
-import { ProfileModule } from './orm/profile/profile.module';
-import { User } from './orm/entity/user.entity';
-import { Profile } from './orm/entity/profile.entity';
+// import { UserModule } from './orm/user/user.module';
+// import { ProfileModule } from './orm/profile/profile.module';
+// import { User } from './orm/entity/user.entity';
+// import { Profile } from './orm/entity/profile.entity';
 import { LoggerModule } from './logger/logger.module';
 import { WinstonModule } from 'nest-winston';
 import { InterceptorModule } from './interceptors/interceptor.module';
 import { CustomDecoratorModule } from './custom-decorator/decorator.module';
-import { CustomProviderModule } from './custom-providers/cats.module';
+// import { CustomProviderModule } from './custom-providers/cats.module';
 // logger
 /* import * as winston from 'winston';
 import {
   WinstonModule,
   utilities as nestWinstonModuleUtilities,
 } from 'nest-winston'; */
+// 动态module
+import { ConfigModule as DynimacConfigModule } from './dynamic-module/config.module';
 @Module({
   imports: [
     CatsModule,
@@ -52,7 +54,7 @@ import {
       entities: [User],
       database: 'test',
     }), */
-    TypeOrmModule.forRootAsync({
+    /*     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
@@ -68,9 +70,9 @@ import {
           entities: [User, Profile],
         };
       },
-    }),
-    UserModule,
-    ProfileModule,
+    }), */
+    // UserModule,
+    // ProfileModule,
     /*     WinstonModule.forRoot({
       level: 'error',
       transports: [
@@ -99,6 +101,7 @@ import {
     // CustomProviderModule,
     DynamicModuleUserModule,
     DynamicModuleAuthModule,
+    DynimacConfigModule.register({ message: 'hello world' }),
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

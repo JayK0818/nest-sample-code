@@ -36,6 +36,7 @@ import {
 } from 'nest-winston'; */
 // 动态module
 import { ConfigModule as DynimacConfigModule } from './dynamic-module/config.module';
+import { ValidationModule } from './validation/validation.module';
 @Module({
   imports: [
     CatsModule,
@@ -104,6 +105,7 @@ import { ConfigModule as DynimacConfigModule } from './dynamic-module/config.mod
     DynamicModuleAuthModule,
     DynimacConfigModule.register({ message: 'hello world' }),
     ExecutionContextModule,
+    ValidationModule,
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

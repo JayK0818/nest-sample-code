@@ -35,3 +35,32 @@ export class ConfigModule {
   }
 }
 ```
+
+```ts
+// 一个Demo (在service中怎么获取到 参数)
+
+// config.module.ts
+@Module({})
+export class ConfigModule {
+  // register 方法: You are expecting to configure a dynamic module with a specific configuration for use
+  // only by the calling module.
+  static register(opts): DynamicModule {
+    return {
+      module: ConfigModule,
+      providers: [
+        {
+          provide: 'CONFIG_OPTIONS',
+          useValue: opts,
+        },
+        ConfigService,
+      ],
+    };
+  }
+}
+
+// config.service.ts
+@Injectable()
+export class ConfigService {
+  contructor(@Inject('CONFIG_OPTIONS') private opts: Record<string, any>) {}
+}
+```

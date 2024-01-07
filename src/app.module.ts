@@ -26,6 +26,7 @@ import { LoggerModule } from './logger/logger.module';
 import { WinstonModule } from 'nest-winston';
 import { InterceptorModule } from './interceptors/interceptor.module';
 import { CustomDecoratorModule } from './custom-decorator/decorator.module';
+import { ExecutionContextModule } from './execution-context/context.module';
 // import { CustomProviderModule } from './custom-providers/cats.module';
 // logger
 /* import * as winston from 'winston';
@@ -102,6 +103,7 @@ import { ConfigModule as DynimacConfigModule } from './dynamic-module/config.mod
     DynamicModuleUserModule,
     DynamicModuleAuthModule,
     DynimacConfigModule.register({ message: 'hello world' }),
+    ExecutionContextModule,
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

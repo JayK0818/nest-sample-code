@@ -14,18 +14,15 @@ import { CreatePlayerDto, User } from './player.dto';
 @Controller('validation')
 export class ValidationController {
   @Post('/create')
-  @UsePipes(
-    new ValidationPipe({
-      transform: true,
-    }),
-  )
   createPlayer(
-    @Body()
-    data: {
-      list: Array<any>;
-    },
+    @Body(
+      new ValidationPipe({
+        transform: true,
+      }),
+    )
+    data: CreatePlayerDto,
   ) {
-    console.log('data', data, data.list, typeof data.list);
+    console.log(data);
     return '创建成功';
   }
   @Post('/create/bulk')

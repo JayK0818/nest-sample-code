@@ -37,6 +37,7 @@ import {
 // 动态module
 import { ConfigModule as DynimacConfigModule } from './dynamic-module/config.module';
 import { ValidationModule } from './validation/validation.module';
+import { CacheModule } from './cache/cache.module';
 @Module({
   imports: [
     CatsModule,
@@ -106,6 +107,7 @@ import { ValidationModule } from './validation/validation.module';
     DynimacConfigModule.register({ message: 'hello world' }),
     ExecutionContextModule,
     ValidationModule,
+    CacheModule,
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

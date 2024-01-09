@@ -13,7 +13,7 @@ import { CacheModule } from '@nestjs/cache-manager'
   imports: [CacheModule.register({
     ttl: 5, // 缓存时间默认5s
     max: 10,  // maximum number of items in cache
-    isGlobal: true  // 全局缓存
+    isGlobal: true  // 全局缓存, 缓存的key是根据路由自动生成的
   })],
   controllers: [AppController]
 })
@@ -75,3 +75,22 @@ export class CacheService {
 ```
 
 以上代码 在 2000ms 之前 请求返回 ['kyrie'], 2s 后 数值变为 ['kyrie', 'lebron'] 依然返回 ['kyrie'], 5s 后 返回 ['kyrie', 'lebron'], 因为默认过期时间为 5s, 此时缓存已过期，重新返回最新的数据 并添加至缓存。
+
+## Async configuration
+
+```ts
+// xxx.module.ts
+CacheModule.registerAsync({
+  useFactory: () => ({
+    ttl: 5,
+  }),
+});
+
+CacheModule.registerAsync({
+  imports: [ConfigModule],
+  useFactory: async (configService: ConfigService) => ({
+    ttl: configService.get('CACHE_TTL'),
+  }),
+  inject: [ConfigService],
+});
+```

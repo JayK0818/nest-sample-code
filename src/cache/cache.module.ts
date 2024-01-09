@@ -6,6 +6,10 @@ import { CacheService } from './cache.service';
 @Module({
   controllers: [CacheController],
   providers: [CacheService],
-  imports: [a.register()],
+  imports: [
+    a.register({
+      isGlobal: true,
+    }),
+  ],
 })
 export class CacheModule {}

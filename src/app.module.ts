@@ -38,6 +38,7 @@ import {
 import { ConfigModule as DynimacConfigModule } from './dynamic-module/config.module';
 import { ValidationModule } from './validation/validation.module';
 import { CacheModule } from './cache/cache.module';
+import { SerializationModule } from './serialization/serialization.module';
 @Module({
   imports: [
     CatsModule,
@@ -108,6 +109,7 @@ import { CacheModule } from './cache/cache.module';
     ExecutionContextModule,
     ValidationModule,
     CacheModule,
+    SerializationModule,
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

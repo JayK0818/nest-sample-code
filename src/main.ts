@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 // import { HttpExceptionFilter } from './filter/http-exception.filter';
@@ -9,7 +9,24 @@ import 'winston-daily-rotate-file';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api');
+  /*   app.enableVersioning({
+    type: VersioningType.URI,
+    prefix: 'v',
+    defaultVersion: '1',
+  }); */
+  /*   app.enableVersioning({
+    type: VersioningType.URI,
+    prefix: 'v',
+  }); */
+  /*   app.enableVersioning({
+    type: VersioningType.HEADER,
+    header: 'Custom-Header',
+  }); */
+  app.enableVersioning({
+    type: VersioningType.MEDIA_TYPE,
+    key: 'v=',
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       disableErrorMessages: false,

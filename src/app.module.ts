@@ -40,9 +40,13 @@ import { ValidationModule } from './validation/validation.module';
 import { CacheModule } from './cache/cache.module';
 import { SerializationModule } from './serialization/serialization.module';
 import { VersionModule } from './version/version.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TaskScheduleModule } from './task-schedule/task.module';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
+    TaskScheduleModule,
     CatsModule,
     LoggerModule,
     BookModule,

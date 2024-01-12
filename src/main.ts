@@ -23,10 +23,10 @@ async function bootstrap() {
     type: VersioningType.HEADER,
     header: 'Custom-Header',
   }); */
-  app.enableVersioning({
+  /*   app.enableVersioning({
     type: VersioningType.MEDIA_TYPE,
     key: 'v=',
-  });
+  }); */
   app.useGlobalPipes(
     new ValidationPipe({
       disableErrorMessages: false,

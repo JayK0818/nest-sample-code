@@ -143,4 +143,80 @@ export class TaskService {
 2. start(): 重新开始
 3. setTime(): stops a job, sets a new time for it, and then starts it
 4. lastDate(): returns a string representation of the last date a job executed.
-5. nextDates(count: number) returns an array of **moment** objecta representing upcoming job execution dates.
+5. nextDates(count: number) returns an array of **moment** object representing upcoming job execution dates.
+   返回一个数组 接下来要输出的时间对象
+
+```ts
+// 以下为官网的 一个demo, 动态 cron job
+import { CronJob } from 'cron';
+
+@Injectable()
+export class TaskScheduleService {
+  constructor(private schedulerRegistry: SchedulerRegistry) {}
+  addCronJob(name: string, seconds: number) {
+    const job = new CronJob(`${seconds} * * * * *`);
+    this.schedulerRegistry.addCronJob(name, job);
+    job.start();
+  }
+}
+```
+
+CronJob constructor from the **cron** package takes a cron pattern as its first argument, (CronJob 构造函数接受 2 个参数, 第一个参数和 Cron 装饰器参数相同, 第二个参数是 是一个函数, 当计时任务 到时了 触发)
+
+```ts
+// 删除计时任务
+{
+  // ...
+  deleteCron(name: string) {
+    this.schedulerRegistry.deleteCronJob(name)
+  }
+  listCron() {
+    this.schedulerRegistry.getCronJobs()
+    // the getCronJobs() method returna a map.
+  }
+}
+```
+
+## Dynamic intervals
+
+Obtain a reference to an interval with the **SchedulerRegistry#getInterval** method. (获得一个 interval 的引用)
+
+```ts
+const interval = this.schedulerRegistry.getInterval('notifications');
+clearInterval(interval);
+```
+
+```ts
+// 创建一个动态的 interval
+@Injectable()
+export class TaskSchedulerService {
+  constructor(private readonly schedulerRegistry: SchedulerRegistry) {}
+  addInterval(name: string, milliseconds: number) {
+    const interval = setInterval(function () {
+      console.log('hello interval');
+    }, milliseconds);
+    this.schedulerRegistry.addInterval(name, interval);
+  }
+}
+```
+
+## Dynamic timeouts
+
+Obtain a reference to a timeout with the **SchedulerRegistry#getTimeout** method.
+
+```ts
+const timeout = this.schedulerRegistry.getTimeout('notifications');
+clearTimeout(timeout);
+```
+
+```ts
+// 创建一个动态的 timeout
+addTimeout(name: string, milliseconds: number) {
+  const callback = () => {
+    this.logger.warn(`Timeout ${name} executing after (${milliseconds})!`);
+  };
+
+  const timeout = setTimeout(callback, milliseconds);
+  this.schedulerRegistry.addTimeout(name, timeout);
+}
+```

@@ -42,11 +42,13 @@ import { SerializationModule } from './serialization/serialization.module';
 import { VersionModule } from './version/version.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TaskScheduleModule } from './task-schedule/task.module';
-
+// cookie module
+import { CookieModule } from './cookie/cookie.module';
 @Module({
   imports: [
-    ScheduleModule.forRoot(),
-    TaskScheduleModule,
+    // ScheduleModule.forRoot(),
+    // TaskScheduleModule,
+    CookieModule,
     CatsModule,
     LoggerModule,
     BookModule,

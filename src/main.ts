@@ -6,10 +6,13 @@ import { AppModule } from './app.module';
 // import { WinstonModule } from 'nest-winston';
 import 'winston-daily-rotate-file';
 // import { join } from 'path';
+// cookie
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api/v1');
+  app.use(cookieParser());
   /*   app.enableVersioning({
     type: VersioningType.URI,
     prefix: 'v',

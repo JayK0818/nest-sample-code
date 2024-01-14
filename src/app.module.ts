@@ -46,6 +46,9 @@ import { TaskScheduleModule } from './task-schedule/task.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { CookieModule } from './cookie/cookie.module';
 import { EventEmitterModule as CustomEventEmitterModule } from './event-emitter/event-emitter.module';
+import { FileUploadModule } from './file-upload/file-upload.module';
+import { MulterModule } from '@nestjs/platform-express';
+import * as multer from 'multer';
 @Module({
   imports: [
     // ScheduleModule.forRoot(),
@@ -123,6 +126,12 @@ import { EventEmitterModule as CustomEventEmitterModule } from './event-emitter/
     VersionModule,
     EventEmitterModule.forRoot(),
     CustomEventEmitterModule,
+    MulterModule.register({
+      storage: multer.diskStorage({
+        destination: 'uploads/',
+      }),
+    }),
+    FileUploadModule,
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

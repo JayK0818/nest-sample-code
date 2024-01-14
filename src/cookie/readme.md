@@ -11,7 +11,9 @@ npm install @types/cookie-parser
 
 // usage
 import * as cookieParser from 'cookie-parser'
-app.use(cookieParser())
+app.use(cookieParser(secret, {
+  decode: (v: string) => s,   //Specifies a function that will be used to decode a cookie's value
+}))
 ```
 
 该中间件接受部分参数
@@ -47,3 +49,18 @@ export class PlayerController {
 ```
 
 以上 demo 先访问 **login** 路径 下发一个 cookie, 然后再访问 **player-list**, 成功解析下发的 cookies
+
+```ts
+// response.cookie
+response.cookie(name, value, {
+  maxAge: 1000, // 过期时间
+  signed: true, // 是否签名
+  expires: new Date() // 过期时间
+  httpOnly: true,   // 禁止js读取
+  path: '/',      // cookie路径
+  domain: '',     // 域名
+  secure: false,
+  encode: (v: string) => v  // 加密
+  sameSite: 'lax' | 'strict' | 'none'
+});
+```

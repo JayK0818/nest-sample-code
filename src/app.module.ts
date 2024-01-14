@@ -43,7 +43,9 @@ import { VersionModule } from './version/version.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TaskScheduleModule } from './task-schedule/task.module';
 // cookie module
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { CookieModule } from './cookie/cookie.module';
+import { EventEmitterModule as CustomEventEmitterModule } from './event-emitter/event-emitter.module';
 @Module({
   imports: [
     // ScheduleModule.forRoot(),
@@ -119,6 +121,8 @@ import { CookieModule } from './cookie/cookie.module';
     CacheModule,
     SerializationModule,
     VersionModule,
+    EventEmitterModule.forRoot(),
+    CustomEventEmitterModule,
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

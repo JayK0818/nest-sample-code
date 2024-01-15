@@ -49,6 +49,7 @@ import { EventEmitterModule as CustomEventEmitterModule } from './event-emitter/
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { MulterModule } from '@nestjs/platform-express';
 import * as multer from 'multer';
+import { StreamModule } from './stream/stream.module';
 @Module({
   imports: [
     // ScheduleModule.forRoot(),
@@ -131,6 +132,7 @@ import * as multer from 'multer';
         destination: 'uploads/',
       }),
     }),
+    StreamModule,
     FileUploadModule,
   ],
   controllers: [AppController, PlayerController],

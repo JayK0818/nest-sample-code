@@ -7,12 +7,27 @@ import { AppModule } from './app.module';
 import 'winston-daily-rotate-file';
 // import { join } from 'path';
 // cookie
-import * as cookieParser from 'cookie-parser';
+// import * as cookieParser from 'cookie-parser';
+import * as session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api/v1');
-  app.use(cookieParser('hello world'));
+  app.use(
+    session({
+      secret: 'my-secret',
+      cookie: {
+        httpOnly: true,
+        path: '/',
+        maxAge: 1000 * 60 * 60 * 24,
+        secure: false,
+      },
+      resave: true,
+      name: 'kyrie',
+      rolling: true,
+    }),
+  );
+  // app.use(cookieParser('hello world'));
   /*   app.enableVersioning({
     type: VersioningType.URI,
     prefix: 'v',

@@ -51,6 +51,8 @@ import { MulterModule } from '@nestjs/platform-express';
 import * as multer from 'multer';
 import { StreamModule } from './stream/stream.module';
 import { SessionModule } from './session/session.module';
+import { ViewModule } from './model-view-controller/view.module';
+import { RouterModule } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -137,6 +139,7 @@ import { SessionModule } from './session/session.module';
     StreamModule,
     FileUploadModule,
     SessionModule,
+    ViewModule,
   ],
   controllers: [AppController, PlayerController],
   providers: [AppService],

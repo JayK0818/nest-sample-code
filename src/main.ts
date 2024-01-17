@@ -1,6 +1,7 @@
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
 // import { HttpExceptionFilter } from './filter/http-exception.filter';
 // import * as winston from 'winston';
 // import { WinstonModule } from 'nest-winston';
@@ -9,10 +10,17 @@ import 'winston-daily-rotate-file';
 // cookie
 // import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api/v1');
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  /*   app.setGlobalPrefix('/api/v1', {
+    exclude: ['views'],
+  }); */
+  app.useStaticAssets(join(__dirname, '..', 'public'));
+  console.log(join(__dirname, '..', 'public'));
+  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.setViewEngine('hbs');
   app.use(
     session({
       secret: 'my-secret',

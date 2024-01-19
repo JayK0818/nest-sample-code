@@ -21,6 +21,7 @@ async function bootstrap() {
   console.log(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
+  app.setGlobalPrefix('/api/v1');
   app.use(
     session({
       secret: 'my-secret',

@@ -53,6 +53,9 @@ import { StreamModule } from './stream/stream.module';
 import { SessionModule } from './session/session.module';
 import { ViewModule } from './model-view-controller/view.module';
 import { RouterModule } from '@nestjs/core';
+import { RateLimitingModule } from './rate-limit/rate-limit.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -140,8 +143,21 @@ import { RouterModule } from '@nestjs/core';
     FileUploadModule,
     SessionModule,
     ViewModule,
+    RateLimitingModule,
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60 * 1000,
+        limit: 5,
+      },
+    ]),
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerModule,
+    },
+    AppService,
   ],
   controllers: [AppController, PlayerController],
-  providers: [AppService],
 })
 export class AppModule {}

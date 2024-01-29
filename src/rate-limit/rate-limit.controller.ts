@@ -1,7 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
-import { Throttle, seconds } from '@nestjs/throttler';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import {
+  Throttle,
+  seconds,
+  ThrottlerGuard,
+  SkipThrottle,
+} from '@nestjs/throttler';
+import { ThrottlerBehindProxyGuard } from './throttler-behind-proxy.guard';
 
-@Throttle({ default: { ttl: seconds(20), limit: 3 } })
+@UseGuards(ThrottlerBehindProxyGuard)
+// @Throttle({ default: { ttl: seconds(100), limit: 3 } })
 @Controller('rate-limiting')
 export class RateLimitingController {
   @Get('player-list')
@@ -9,6 +16,7 @@ export class RateLimitingController {
     console.log('执行了吗');
     return ['kyrie', 'durant'];
   }
+  @SkipThrottle()
   @Get('message')
   getMessage() {
     return 'hello world';

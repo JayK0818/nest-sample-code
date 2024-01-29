@@ -58,8 +58,9 @@ async function bootstrap() {
     new ValidationPipe({
       disableErrorMessages: false,
       whitelist: true,
-      forbidNonWhitelisted: true,
+      forbidNonWhitelisted: false,
       transform: true,
+      validateCustomDecorators: true,
     }),
   );
   // app.useGlobalFilters(

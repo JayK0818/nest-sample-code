@@ -925,7 +925,124 @@ new winston.transports.DailyRotateFile({
 })
 ```
 
+## Jwt
+
+JWT utilities module for **Nest** based on the **jaonwebtoken** package.
+
+```js
+npm install --save @nestjs/jwt
+
+// usage
+import { JwtModule } from '@nestjs/jwt'
+@Module({
+  imports: [
+    JwtModule.register({
+      secret: 'hello',
+      publicKey: '...',
+      privateKey: '...'
+    })
+  ]
+})
+
+// use factory
+@Module({
+  imports: [
+    JwtModule.registerAsync({
+      useFactory() {
+        return {
+          secret: 'hello'
+        }
+      }
+    })
+    // 或者
+    JwtModule.registerAsyng({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('SECRET')
+      }),
+      inject: [ConfigService]
+    })
+  ]
+})
+```
+
+### API
+
+```ts
+import { JwtService } from '@nestjs/jwt';
+@Injectable()
+export class LoginService {
+  constructor(private readonly jwtService: JwtService) {}
+  sign() {
+    this.jwtService.sign(payload, secret, {});
+    // 和 jsonwebtoken.sign()方法一样, 不同的是 options中新增3个属性, secret, privateKey and publicKey
+    // 可以覆盖 module中设置的相关属性值
+  }
+  verify() {
+    this.jwtService.verify(payload, {});
+  }
+}
+```
+
+## jsonwebtoken
+
+```ts
+npm install jsonwebtoken
+```
+
+### jwt.sign
+
+```js
+jwt.sign(payload, secretOrPrivateKey, callback);
+
+/**
+ * 如果提供了回调函数的话, token将作为第二个参数返回, 如果没有提供回调函数,直接返回token 字符串
+ */
+jwt.sign({ name: 'hello world' }, 'secret', (err, data) => {
+  console.log(data);
+});
+const token = jwt.sign({ name: 'hello world' }, 'secret');
+
+// options
+jwt.sign({ message: 'hello world' }, 'secret', {
+  noTimestamp: true, // token不生成时间戳
+  expiresIn: '2 days',
+  mutatePayload: true,
+  /**
+   *  If true, the sign function will modify the payload object directly
+   */
+});
+```
+
+### jwt.verify
+
+```js
+jwt.verify(token, secretOrPublicKey, callback);
+
+/**
+ * 如果提供了回调函数,并且密钥和属性合法的话, 解码的数据将会作为callback参数返回
+ * 如果没有提供回调函数, 将直接返回解码的数据
+ */
+const data = jwt.verify(token, 'hello');
+
+jwt.verify(token, 'hello', (err, data) => {
+  console.log(data);
+});
+
+// 如果提供了回调函数参数, 那么 secretOrPublicKey 可以是一个函数用来获取密钥
+```
+
 [nestjs-pino](https://www.npmjs.com/package/nestjs-pino)
 [pino-roll](https://www.npmjs.com/package/pino-roll)
 [winston](https://www.npmjs.com/package/winston)
 [winston-daily-rotate-file](https://www.npmjs.com/package/winston-daily-rotate-file)
+[argon-2](https://www.npmjs.com/package/argon2)
+Todo
+
+1. 验证对象参数中的 数组字段
+2. api 和 model-view-controller 路径
+3. jest
+4. e2e
+5. pactum
+
+装饰器有多个, 从下--->上 执行

@@ -1,6 +1,6 @@
 import { Controller, Get, Render } from '@nestjs/common';
 
-@Controller('views')
+@Controller('page')
 export class ViewController {
   @Get('player-list')
   @Render('index')

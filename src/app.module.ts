@@ -56,7 +56,10 @@ import { RouterModule } from '@nestjs/core';
 import { RateLimitingModule } from './rate-limit/rate-limit.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-
+import { AuthorizationModule } from './authorization/authorization.module';
+import { AuthModule as AuthenticationModule } from './authentication/auth.module';
+import { JwtModule } from '@nestjs/jwt';
+import { SampleModule } from './sample/sample.module';
 @Module({
   imports: [
     // ScheduleModule.forRoot(),
@@ -144,12 +147,19 @@ import { APP_GUARD } from '@nestjs/core';
     SessionModule,
     ViewModule,
     RateLimitingModule,
-    ThrottlerModule.forRoot([
+    /*     ThrottlerModule.forRoot([
       {
         ttl: 60 * 1000,
         limit: 5,
       },
-    ]),
+    ]), */
+    AuthorizationModule,
+    AuthenticationModule,
+    JwtModule.register({
+      global: true,
+      secret: 'hello',
+    }),
+    SampleModule,
   ],
   providers: [
     {

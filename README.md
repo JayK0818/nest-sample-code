@@ -1,5 +1,17 @@
 # Nestjs
 
+## Install
+
+```js
+npm install -g @nestjs/cli
+nest new project-name
+```
+
+```js
+npm run start:dev
+// 使用此命令启动服务, 会监视文件修改, 自动重新编译和重新加载服务
+```
+
 ## @nestjs/config
 
 In Node.js applications, it is common to use **.env** files, holding key-value pairs where each key presents a

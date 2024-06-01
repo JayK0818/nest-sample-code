@@ -61,6 +61,7 @@ async function bootstrap() {
       forbidNonWhitelisted: false,
       transform: true,
       validateCustomDecorators: true,
+      stopAtFirstError: true, //如果一个参数不符合多条验证规则, 默认会返回每条规则验证错误的提示, 设置为true, 只返回一条错误验证消息
     }),
   );
   // app.useGlobalFilters(

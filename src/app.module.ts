@@ -60,6 +60,8 @@ import { AuthorizationModule } from './authorization/authorization.module';
 import { AuthModule as AuthenticationModule } from './authentication/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { SampleModule } from './sample/sample.module';
+import {TypeormAppModule} from './typeorm/typeorm.module';
+
 @Module({
   imports: [
     // ScheduleModule.forRoot(),
@@ -160,6 +162,7 @@ import { SampleModule } from './sample/sample.module';
       secret: 'hello',
     }),
     SampleModule,
+    TypeormAppModule
   ],
   providers: [
     {

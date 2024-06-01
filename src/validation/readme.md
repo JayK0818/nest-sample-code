@@ -122,3 +122,30 @@ a string identifier to a number.
 ## Parsing and validating arrays
 
 // 未实现
+
+## CustomValidator (class-validator)
+
+```ts
+import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
+
+@ValidatorConstraint({ name: 'customText', async: false })
+export class CustomTextLength implements ValidatorConstraintInterface {
+  validate(text: string, args: ValidationArguments) {
+    return text.length > 1 && text.length < 10;
+  }
+  defaultMessage(args: ValidationArguments) {
+    return 'Text ($value) is too short or too long!';
+  }
+}
+// Our class must implement **ValidatorConstraintInterface** interface and it's **validate** method.
+
+// 使用
+import { Validate } from 'class-validator'
+export class createUserDto {
+  @Validate(CustomTextLength, {
+    message: 'Title is too short or long!'
+  })
+  title: string
+}
+```
+

@@ -89,7 +89,7 @@ export class TransformInterceptor implements NestInterceptor {
          * assign the response object to the data property of a newly created object,
          * returning the new object to the client.
          */
-        .pipe((data) => ({ data, code: 1, message: 'success' }))
+        .pipe(map(data => ({ data, code: 1, message: 'success' })));
     );
 
     /**

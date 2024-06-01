@@ -64,7 +64,8 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()  // 每个实体必须有一个主键列
+  @PrimaryGeneratedColumn() // 创建自动生成的列
   id: number;
 
   @Column()

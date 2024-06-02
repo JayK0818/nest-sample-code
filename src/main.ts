@@ -1,8 +1,9 @@
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+// import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from './typeorm/validation.pipe'
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
-// import { HttpExceptionFilter } from './filter/http-exception.filter';
+import { HttpExceptionFilter } from './filter/http-exception.filter';
 // import * as winston from 'winston';
 // import { WinstonModule } from 'nest-winston';
 import 'winston-daily-rotate-file';
@@ -17,12 +18,12 @@ async function bootstrap() {
   /*   app.setGlobalPrefix('/api/v1', {
     exclude: ['views'],
   }); */
-  app.useStaticAssets(join(__dirname, '..', 'public'));
+/*   app.useStaticAssets(join(__dirname, '..', 'public'));
   console.log(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
-  app.setViewEngine('hbs');
+  app.setViewEngine('hbs'); */
   app.setGlobalPrefix('/api/v1');
-  app.use(
+/*   app.use(
     session({
       secret: 'my-secret',
       cookie: {
@@ -35,7 +36,7 @@ async function bootstrap() {
       name: 'kyrie',
       rolling: true,
     }),
-  );
+  ); */
   // app.use(cookieParser('hello world'));
   /*   app.enableVersioning({
     type: VersioningType.URI,
@@ -56,14 +57,18 @@ async function bootstrap() {
   }); */
   app.useGlobalPipes(
     new ValidationPipe({
-      disableErrorMessages: false,
       whitelist: true,
       forbidNonWhitelisted: false,
       transform: true,
       validateCustomDecorators: true,
-      stopAtFirstError: true, //如果一个参数不符合多条验证规则, 默认会返回每条规则验证错误的提示, 设置为true, 只返回一条错误验证消息
+      validationError: {
+        target: false,
+        value: false
+      }
+      // stopAtFirstError: true, //如果一个参数不符合多条验证规则, 默认会返回每条规则验证错误的提示, 设置为true, 只返回一条错误验证消息
     }),
   );
+  app.useGlobalFilters(new HttpExceptionFilter());
   // app.useGlobalFilters(
   //   new HttpExceptionFilter(
   //     WinstonModule.createLogger({

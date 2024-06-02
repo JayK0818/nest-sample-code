@@ -113,16 +113,30 @@ export class UserController {
     console.log(id, typeof id) // 123  number
   }
 }
+
+// 也可以显式地使用 ParseIntPipe, ParseBoolPipe, ParseStringPipe
+@Get(':id')
+findOne(
+  @Param('id', ParseIntPipe) id: number,
+  @Query('sort', ParseBoolPipe) sort: boolean
+) {
+}
+
+
+@Post()
+findOne(@Body('id', ParseIntPipe) id: number) {
+  
+}
 ```
 
 We specified the **id** type as a **number**, therefore, the **ValidationPipe** will try to automatically convert
 a string identifier to a number.
 (我们将 id 类型指定为 number 类型, 因此, ValidationPipe 将尝试自动转换为 number 类型)
 
-## Parsing and validating arrays
 
 // 未实现
-
+1. Parsing and validating arrays
+2. 解析嵌套的对象
 ## CustomValidator (class-validator)
 
 ```ts
@@ -146,6 +160,33 @@ export class createUserDto {
     message: 'Title is too short or long!'
   })
   title: string
+}
+```
+
+## Validation messages
+
+  You can specify validation message in the decorator options and that message will be returned in the
+  **ValidationError** returned by the **validate** method
+```ts
+import { Length } from 'class-validator'
+
+export class UserDto {
+  @IsString()
+  @Length(6, 20, {
+    message: (args) => {
+      console.log(args)
+/**
+ * {
+    targetName: 'CreateUserDto',
+    property: 'username',
+    object: CreateUserDto { username: '', password: '111112233' },
+    value: '',
+    constraints: [ 6, 20 ]
+  }
+*/
+      return '用户名不合法'
+    }
+  })
 }
 ```
 

@@ -168,8 +168,9 @@ export class User {
 }
 ```
 
-**@JoinColumn()** 只能在关系的一侧设置(且必须在数据库表中具有外键的一侧)。另一个表将包含一个 **relation id** 和目标实体表的外键。
+**@JoinColumn()** 只能在关系的一侧设置(且必须在数据库表中具有外键的一侧)。
 
+**@OneToOne** 允许在两个实体之间创建一对一的关系。
 ## Subscriber
 
 With TypeORM **subscribers**, you can listen to specific entity events.

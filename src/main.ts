@@ -1,5 +1,5 @@
-// import { ValidationPipe } from '@nestjs/common';
-import { ValidationPipe } from './typeorm/validation.pipe'
+import { ValidationPipe } from '@nestjs/common';
+// import { ValidationPipe } from './typeorm/validation.pipe'
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -12,7 +12,7 @@ import 'winston-daily-rotate-file';
 // import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
 import { join } from 'path';
-
+import './typeorm/class-validator'
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   /*   app.setGlobalPrefix('/api/v1', {

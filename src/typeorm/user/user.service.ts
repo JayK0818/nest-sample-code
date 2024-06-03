@@ -2,10 +2,17 @@ import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from './user.entity'
-
+import { UserProfile } from './user-profille.entity'
+import { plainToInstance } from 'class-transformer'
 interface UserProps {
   username: string
   password: string
+}
+
+interface UserProfileProps {
+  age: number
+  address: string
+  school: string
 }
 
 type UpdateUserProps = Partial<UserProps> & {
@@ -24,7 +31,8 @@ export class UserService {
   findOne(id: number): Promise<User | null> {
     return this.userRepository.findOneBy({ id });
   }
-  async createUser(user: UserProps) { // 创建用户
+  async createUser(user: UserProps) {
+    // 创建用户
     try {
       const is_user_exist = await this.userRepository.findOneBy({
         username: user.username,
@@ -45,38 +53,52 @@ export class UserService {
       });
     }
   }
-  async updateUser(user: UpdateUserProps) { // 更新用户
+  async updateUser(user: UpdateUserProps) {
+    // 更新用户
     try {
-      const targetUser = await this.userRepository.findOneBy({ id: user.id })
+      const targetUser = await this.userRepository.findOneBy({ id: user.id });
       if (!targetUser) {
-        throw new HttpException('用户不存在, 无法更新', HttpStatus.BAD_REQUEST)
+        throw new HttpException('用户不存在, 无法更新', HttpStatus.BAD_REQUEST);
       }
       if (user.password) {
-        targetUser.password = user.password
+        targetUser.password = user.password;
       }
       if (user.username) {
-        targetUser.username = user.username
+        targetUser.username = user.username;
       }
-      await this.userRepository.save(targetUser)
-      return 'update success'
+      await this.userRepository.save(targetUser);
+      return 'update success';
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST, {
-        cause: err
-      })
+        cause: err,
+      });
     }
   }
-  async removeUser(id: number) { // 删除用户
+  async removeUser(id: number) {
+    // 删除用户
     try {
-      const targetUser = await this.userRepository.findOneBy({ id })
+      const targetUser = await this.userRepository.findOneBy({ id });
       if (!targetUser) {
-        throw new HttpException('用户不存在, 或已经被删除', HttpStatus.BAD_REQUEST)
+        throw new HttpException(
+          '用户不存在, 或已经被删除',
+          HttpStatus.BAD_REQUEST,
+        );
       }
-      await this.userRepository.remove(targetUser)
-      return 'remove-success'
+      await this.userRepository.remove(targetUser);
+      return 'remove-success';
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST, {
-        cause: err
-      })
+        cause: err,
+      });
+    }
+  }
+  // 设置profile
+  async setProfile(user_id: number, profile: UserProfileProps) {
+    const user = await this.userRepository.findOneBy({ id: user_id });
+    if (user) {
+      const user_profile = plainToInstance(UserProfile, profile);
+      user.profile = user_profile;
+      await this.userRepository.save(user);
     }
   }
 }

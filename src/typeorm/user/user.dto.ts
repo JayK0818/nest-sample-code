@@ -1,4 +1,10 @@
-import { IsNumberString, IsString, Length } from 'class-validator'
+import {
+  IsNumberString,
+  IsString,
+  Length,
+  ValidateNested,
+  IsNotEmpty,
+} from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types'
 export class CreateUserDto {
   @IsString()
@@ -18,4 +24,26 @@ export class CreateUserDto {
 export class UpdateUserDot extends PartialType(CreateUserDto) {
   @IsNumberString()
   id: number
+}
+
+/**
+ * @description 用户资料
+*/
+class UserProfileDto {
+  @IsNumberString()
+  age: number;
+
+  @IsString()
+  address: string;
+
+  @IsString()
+  school: string;
+}
+export class CreateUserProfileDto {
+  @IsNumberString()
+  id: number;
+
+  @ValidateNested()
+  @IsNotEmpty()
+  profile_props: UserProfileDto;
 }

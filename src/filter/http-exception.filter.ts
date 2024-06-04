@@ -13,7 +13,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest();
     const response = ctx.getResponse();
     const status = exception.getStatus()
-    console.log('exception:', exception);
+    console.log('执行了吗123')
+    console.log('exception:111111111', exception);
     response.status(status).json({
       code: status,
       timestamp: new Date().toLocaleDateString(),

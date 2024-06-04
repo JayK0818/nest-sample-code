@@ -1,6 +1,6 @@
 import { IsString, IsNumber, ValidateNested, validate, IsNotEmpty } from 'class-validator'
-import { plainToInstance } from 'class-transformer'
-
+import { plainToInstance, Type } from 'class-transformer'
+// ------- 一个demo ------------
 (function () {
   class UserProfile {
     @IsString()
@@ -18,6 +18,7 @@ import { plainToInstance } from 'class-transformer'
 
     @ValidateNested()
     @IsNotEmpty()
+    @Type(() => UserProfile)
     user_profile: UserProfile;
   }
 
@@ -41,5 +42,20 @@ import { plainToInstance } from 'class-transformer'
     }
     console.log('------------------ errors -------------------', errors)
   }
-  validateUser()
+  // validateUser()
+
+  console.log('----------------------------')
+  async function validateNestUser() {
+    const user = plainToInstance(User, {
+      id: 1,
+      name: 'hello',
+      user_profile: {
+        age: '12',
+        address: 1111
+      }
+    })
+    const errors = await validate(user)
+    console.log('----------user-errors:------------', errors, JSON.stringify(errors))
+  }
+  validateNestUser()
 })()

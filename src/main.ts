@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { HttpException, HttpStatus, ValidationPipe } from '@nestjs/common';
 // import { ValidationPipe } from './typeorm/validation.pipe'
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -13,6 +13,24 @@ import 'winston-daily-rotate-file';
 import * as session from 'express-session';
 import { join } from 'path';
 import './typeorm/class-validator'
+
+function createErrorString(errors: any[]) {
+  const err = []
+  const reserve_children = (list: any[] = []) => {
+    for (const error of list) {
+      if (error.constraints) {
+        // @ts-ignore
+        err.push(...Object.values((error as any).constraints));
+      }
+      if (error.children && error.children) {
+        reserve_children(error.children)
+      }
+    }
+  }
+  reserve_children(errors)
+  return err
+}
+
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   /*   app.setGlobalPrefix('/api/v1', {
@@ -64,6 +82,11 @@ async function bootstrap() {
       validationError: {
         target: false,
         value: false
+      },
+      exceptionFactory: (errors: any) => {
+        const errorList: string[] = createErrorString(errors)
+        console.log('errorList:', errorList);
+        throw new HttpException(errorList.join(''), HttpStatus.BAD_REQUEST)
       }
       // stopAtFirstError: true, //如果一个参数不符合多条验证规则, 默认会返回每条规则验证错误的提示, 设置为true, 只返回一条错误验证消息
     }),

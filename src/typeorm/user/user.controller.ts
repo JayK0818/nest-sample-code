@@ -21,7 +21,6 @@ export class UserController {
   }
   @Post('user/set_profile')
   saveUserProfile(@Body() userProfile: CreateUserProfileDto) {
-    console.log('执行了吗', userProfile)
     const { id, profile_props } = userProfile;
     return this.userService.setProfile(id, profile_props)
   }

@@ -19,6 +19,7 @@ We will start by binding **ValidationPipe** at the application level.
 使用**ValidationPipe** 自动验证
 
 ```ts
+import { HttpException } from '@nestjs/common'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
@@ -31,6 +32,12 @@ async function bootstrap() {
        */
       forbidNonWhitelisted: true, // 如果要禁止通过多传递了属性, 设置此属性为 true.
       transform: true, //automatically transform payloads to be objects typed according to their DTO classes.
+      // 自定义抛出的异常
+      exceptionFactory: (errors: any) => {
+        const errorList: string[] = createErrorString(errors)
+        console.log('errorList:', errorList);
+        throw new HttpException(errorList.join(''), HttpStatus.BAD_REQUEST)
+      }
     }),
   );
   app.listen(3000);
@@ -190,3 +197,24 @@ export class UserDto {
 }
 ```
 
+## class-transformer
+
+  When you are trying to transform objects that have nested objects, it's required to known what
+  type of object you are trying to transform.
+  We should implicitly specify what type of object each property contain.
+
+```ts
+import { Type, plainToClass } from 'class-transformer'
+
+export class Album {
+  id: number
+  name: string
+  @Type(() => Photo)
+}
+class Photo {
+  id: number
+  filename: string
+}
+
+const album = plainToClass(Album, albumJson)
+```

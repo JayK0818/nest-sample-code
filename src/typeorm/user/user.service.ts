@@ -24,6 +24,8 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(UserProfile)
+    private userProfileRepository: Repository<UserProfile>
   ) {}
   findAll(): Promise<User[]> {
     return this.userRepository.find();
@@ -96,8 +98,14 @@ export class UserService {
   async setProfile(user_id: number, profile: UserProfileProps) {
     const user = await this.userRepository.findOneBy({ id: user_id });
     if (user) {
-      const user_profile = plainToInstance(UserProfile, profile);
+      await this.userProfileRepository.save(profile)
+      const user_profile = new UserProfile()
+      for (const key in profile) {
+        user_profile[key] = profile[key]
+      }
       user.profile = user_profile;
+      // 先保存user_profile
+      await this.userProfileRepository.save(user_profile);
       await this.userRepository.save(user);
     }
   }

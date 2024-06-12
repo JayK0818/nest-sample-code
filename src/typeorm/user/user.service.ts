@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from './user.entity'
 import { UserProfile } from './user-profille.entity'
-import { plainToInstance } from 'class-transformer'
+// import { plainToInstance } from 'class-transformer'
 interface UserProps {
   username: string
   password: string
@@ -107,6 +107,23 @@ export class UserService {
       // 先保存user_profile
       await this.userProfileRepository.save(user_profile);
       await this.userRepository.save(user);
+      return 'success'
+    } else {
+      throw new HttpException('用户不存在', HttpStatus.BAD_REQUEST)
     }
+  }
+  // 查询用户 及其用户资料
+  async getUserProfile(user_id: number) {
+    console.log('user-id:', user_id)
+/*     const user = await this.userRepository.find({ relations: ['profile'] })
+    const target = await this.userRepository.findOneBy({ id: user_id }) */
+    const user = await this.userRepository.find({
+      where: {
+        id: user_id
+      },
+      relations: ['profile']
+    })
+    console.log('user:', user)
+    return user
   }
 }

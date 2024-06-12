@@ -24,4 +24,8 @@ export class UserController {
     const { id, profile_props } = userProfile;
     return this.userService.setProfile(id, profile_props)
   }
+  @Post('user/user_profile')
+  getUserProfile(@Body('user_id') user_id: number) {
+    return this.userService.getUserProfile(user_id)
+  }
 }

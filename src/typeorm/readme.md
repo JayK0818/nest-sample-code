@@ -165,6 +165,7 @@ export class User {
   @OneToOne(Profile)
   @JoinColumn({ name: 'profile_id' }) // 可以定义关联的id名称
   profile: Profile;
+  // 数据库中定义的字段为 profileId
 }
 ```
 

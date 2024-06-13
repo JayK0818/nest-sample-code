@@ -24,7 +24,7 @@ export class User {
   @UpdateDateColumn()
   update_time: Date
 
-  @OneToOne(type => UserProfile)
+  @OneToOne(type => UserProfile, profile => profile.user)
   @JoinColumn()
   profile: UserProfile
 }

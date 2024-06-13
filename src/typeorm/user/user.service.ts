@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from './user.entity'
 import { UserProfile } from './user-profille.entity'
+import { add } from "winston";
 // import { plainToInstance } from 'class-transformer'
 interface UserProps {
   username: string
@@ -19,13 +20,21 @@ type UpdateUserProps = Partial<UserProps> & {
   id: number
 }
 
+interface UserWithProfileProps {
+  username: string
+  password: string
+  address: string
+  age: number | string
+  school: string
+}
+
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
     @InjectRepository(UserProfile)
-    private userProfileRepository: Repository<UserProfile>
+    private userProfileRepository: Repository<UserProfile>,
   ) {}
   findAll(): Promise<User[]> {
     return this.userRepository.find();
@@ -98,32 +107,57 @@ export class UserService {
   async setProfile(user_id: number, profile: UserProfileProps) {
     const user = await this.userRepository.findOneBy({ id: user_id });
     if (user) {
-      await this.userProfileRepository.save(profile)
-      const user_profile = new UserProfile()
+      await this.userProfileRepository.save(profile);
+      const user_profile = new UserProfile();
       for (const key in profile) {
-        user_profile[key] = profile[key]
+        user_profile[key] = profile[key];
       }
       user.profile = user_profile;
       // 先保存user_profile
       await this.userProfileRepository.save(user_profile);
       await this.userRepository.save(user);
-      return 'success'
+      return 'success';
     } else {
-      throw new HttpException('用户不存在', HttpStatus.BAD_REQUEST)
+      throw new HttpException('用户不存在', HttpStatus.BAD_REQUEST);
     }
   }
   // 查询用户 及其用户资料
   async getUserProfile(user_id: number) {
-    console.log('user-id:', user_id)
-/*     const user = await this.userRepository.find({ relations: ['profile'] })
+    console.log('user-id:', user_id);
+    /*     const user = await this.userRepository.find({ relations: ['profile'] })
     const target = await this.userRepository.findOneBy({ id: user_id }) */
     const user = await this.userRepository.find({
       where: {
-        id: user_id
+        id: user_id,
       },
-      relations: ['profile']
-    })
-    console.log('user:', user)
-    return user
+      relations: ['profile'],
+    });
+    console.log('user:', user);
+    return user;
+  }
+  // 获取所有用户资料列表
+  async getUserProfileList() {
+    // const list = await this.userProfileRepository.find()
+    const list = await this.userProfileRepository.find({
+      relations: ['user'],
+    });
+    console.log('profile-list:', list);
+    return list;
+  }
+  // 创建用户的同时保存用户资料
+  async createUserWithProfile(data: UserWithProfileProps) {
+    const { username, password, school, age, address } = data
+    const user = new User()
+    user.username = username
+    user.password = password
+
+    const profile = new UserProfile()
+    profile.address = address
+    profile.age = Number(age)
+    profile.school = school
+
+    user.profile = profile
+    await this.userRepository.save(user)
+    return '创建成功'
   }
 }

@@ -50,3 +50,21 @@ export class CreateUserProfileDto {
   @Type(() => UserProfileDto)
   profile_props: UserProfileDto;
 }
+
+// 保存用户同时保存用户资料
+export class CreateUserWithProfileDto {
+  @IsString()
+  username: string
+
+  @IsString()
+  password: string
+
+  @IsString()
+  school: string
+
+  @IsString()
+  address: string
+
+  @IsString()
+  age: string
+}

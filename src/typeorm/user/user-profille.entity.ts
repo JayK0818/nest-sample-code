@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, PrimaryGeneratedColumn, OneToOne } from 'typeorm'
+import { User } from './user.entity'
 @Entity()
 export class UserProfile {
   @PrimaryGeneratedColumn()
@@ -12,4 +13,7 @@ export class UserProfile {
 
   @Column()
   school: string
+
+  @OneToOne(() => User, user => user.profile)
+  user: User
 }

@@ -138,6 +138,8 @@ each table.
 2. One-to-many/Many-to-one: use the **OneToMany()** and **@ManyToOne()** decorators.
 3. Many-to-many: use the **@ManyToMany()** decorator
 
+### 一对一
+
 以下是一个 one-to-one 的例子, 每个用户对应一个 他自己的用户资料表, 并且一个用户资料文件仅由一个用户拥有。
 
 ```ts
@@ -197,6 +199,39 @@ export class Profile {
   user: User;
 }
 ```
+### 多对一/一对多
+
+  多对一/一对多 是指A包含多个B实例的关系, 但是B只包含一个A实例。
+
+```ts
+// photo.entity.ts
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm'
+
+@Entity()
+export class Photo {
+  @PrimaryGeneratedColumn()
+  id: number
+
+  @Column()
+  url: string
+
+  @ManyToOne(() => User, user => user.photos)
+  user: User
+}
+
+// user.entity.ts
+export class UserEntity {
+  @PrimaryGeneratedColumn()
+  id: number
+
+  @Column()
+  name: string
+
+  @OneToMany(() => Photo, photo => photo.user)
+  photos: Photo[] // 对应多个, 所以此处使用数组
+}
+```
+  **@ManyToOne** 可以单独使用, 但是 **@OneToMany** 必须搭配 **@ManyToOne** 使用。
 ## Subscriber
 
 With TypeORM **subscribers**, you can listen to specific entity events.

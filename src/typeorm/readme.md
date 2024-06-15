@@ -3,7 +3,7 @@
 **TypeORM** is the most mature Object Relational Mapper(ORM) available for TypeScript.
 对象关系映射
 
-常见关联类型： 一对一，一对多，多对多
+常见关联类型： 一对一, 一对多, 多对多
 
 ```ts
 // install
@@ -98,7 +98,6 @@ import { User } from './users/user.entity';
   ]
 })
 
-
 // user.module.ts
 @Module({
   /**
@@ -157,6 +156,7 @@ import {
 import { Profile } from './profile.entity';
 
 @Entity()
+// 此处user为数据库的表名, 
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -214,7 +214,7 @@ export class Photo {
 
   @Column()
   url: string
-
+  // 在你设置 @ManyToOne的地方, 相关实体将有 **关联id** 和外键。外键定义在 多的 一方。
   @ManyToOne(() => User, user => user.photos)
   user: User
 }

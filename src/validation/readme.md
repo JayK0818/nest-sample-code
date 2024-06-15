@@ -16,7 +16,7 @@ incoming client payloads.
 ## Auto-validation
 
 We will start by binding **ValidationPipe** at the application level.
-使用**ValidationPipe** 自动验证
+使用 **ValidationPipe** 自动验证
 
 ```ts
 import { HttpException } from '@nestjs/common'

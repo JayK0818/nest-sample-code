@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { UserModule } from './user/user.module'
-import { ClassModule } from './class/class.module'
+import { GradeModule } from './class/grade.module';
 
 @Module({
   imports: [
     UserModule,
-    ClassModule,
+    GradeModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -15,7 +15,7 @@ import { ClassModule } from './class/class.module'
       password: '15209891396kyrie',
       database: 'test',
       synchronize: false,
-      autoLoadEntities: true
+      autoLoadEntities: true,
     }),
   ],
 })

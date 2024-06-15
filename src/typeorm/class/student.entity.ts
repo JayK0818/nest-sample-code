@@ -1,23 +1,23 @@
 import { Column, PrimaryGeneratedColumn, Entity, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm'
-import { ClassEntity } from './class.entity'
+import { Grade } from './grade.entity';
 
 @Entity()
-export class StudentEntity {
+export class Student {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   @Column()
-  name: string
+  name: string;
 
   @Column()
-  age: number
+  age: number;
 
-  @ManyToOne(() => ClassEntity, c => c.students)
-  class: number
+  @ManyToOne(() => Grade, (c) => c.students)
+  grade: number;
 
   @CreateDateColumn()
-  created_at: Date
+  create_at: Date;
 
   @UpdateDateColumn()
-  updated_at: Date
+  update_at: Date;
 }

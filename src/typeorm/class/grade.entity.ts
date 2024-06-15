@@ -1,8 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm'
-import { StudentEntity as Student } from './student.entity'
+import { Student } from './student.entity';
 
 @Entity()
-export class ClassEntity {
+  // 这个是表明
+export class Grade {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -10,12 +11,12 @@ export class ClassEntity {
   name: string;
 
   // 一个班级可以有多个学生, 每个学生对应一个班级
-  @OneToMany(() => Student, (student) => student.class)
+  @OneToMany(() => Student, (student) => student.grade)
   students: Student[];
 
   @CreateDateColumn()
-  created_at: Date;
+  create_at: Date;
 
   @UpdateDateColumn()
-  updated_at: Date
+  update_at: Date
 }

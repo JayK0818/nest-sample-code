@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { UserModule } from './user/user.module'
-import { GradeModule } from './class/grade.module';
+// import { GradeModule } from './grade/grade.module';
+import { LessonModule } from './lesson/lesson.module'
 
 @Module({
   imports: [
     UserModule,
-    GradeModule,
+    // GradeModule,
+    LessonModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',

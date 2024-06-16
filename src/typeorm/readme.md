@@ -232,6 +232,49 @@ export class UserEntity {
 }
 ```
   **@ManyToOne** 可以单独使用, 但是 **@OneToMany** 必须搭配 **@ManyToOne** 使用。
+
+### 多对多
+
+  多对多是一种 A 包含多个 B实例, 而B包含多个A实例的关系。
+
+  以下为官网的一个demo
+
+```ts
+// Question可以包含多个 categories, 每个category 可以有多个questions
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
+
+// category.entity.ts
+@Entity()
+export class Category {
+  @PrimaryGeneratedColumn()
+  id: number
+
+  @Column()
+  name: string
+}
+
+// question.entity.ts
+import { ManyToMany, JoinTable } from 'typeorm'
+import { Category } from './Caterogy'
+
+@Entity()
+export class Question {
+  @PrimaryGeneratedColumn()
+  id: number
+
+  @Column()
+  title: string
+
+  @Column()
+  text: string
+
+// JoinTable 是 @ManyToMany 关系所必须的。
+  @ManyToMany(() => Category)
+  @JoinTable()
+  categories: Category[]
+}
+```
+
 ## Subscriber
 
 With TypeORM **subscribers**, you can listen to specific entity events.

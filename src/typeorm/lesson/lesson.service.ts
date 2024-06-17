@@ -24,16 +24,27 @@ export class LessonService {
     return '课程创建成功'
   }
   async createStudentWithLesson({ name, lesson_id }: { name: string, lesson_id: string }) {
-    const lesson = await this.lessonRepository.findOneBy({
-      id: Number(lesson_id)
-    })
+    const lesson = await this.lessonRepository.findOne({
+      where: {
+        id: Number(lesson_id),
+      },
+      relations: ['students']
+    });
     if (!lesson) {
-      throw new HttpException('课程不存在或已经删除', HttpStatus.BAD_REQUEST)
+      throw new HttpException('课程不存在或已删除', HttpStatus.BAD_REQUEST)
     }
-    const isStudentExist = await this.studentRepository.findOneBy({
+    let isStudentExist = await this.studentRepository.findOneBy({
       name
     })
     if (!isStudentExist) {
+      const student = new Student()
+      student.name = name
+      isStudentExist = await this.studentRepository.save(student)
+    }
+    lesson.students.push(isStudentExist)
+    await this.lessonRepository.save(lesson)
+    console.log(isStudentExist)
+/*     if (!isStudentExist) {
       const student = new Student()
       student.name = name
       await this.studentRepository.save(student)
@@ -45,7 +56,27 @@ export class LessonService {
       lesson.students = lesson.students ?? []
       lesson.students.push(isStudentExist)
       await this.lessonRepository.save(lesson)
-    }
+    } */
     return 'success'
+  }
+  // 获取当前课程有哪些学生
+  async getLessonStudentsList(lessonId: number) {
+    const res = await this.lessonRepository.findOne({
+      where: {
+        id: Number(lessonId)
+      },
+      relations: ['students']
+    })
+    return res
+  }
+  // 获取某个学生选择了哪些课程
+  async getStudentLessonList(studentId: number) {
+    const res = await this.studentRepository.findOne({
+      where: {
+        id: Number(studentId)
+      },
+      relations: ['lessons']
+    })
+    return res
   }
 }

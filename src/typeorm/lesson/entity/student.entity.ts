@@ -1,5 +1,5 @@
-import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Entity } from 'typeorm'
-
+import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Entity, ManyToMany, JoinTable } from 'typeorm'
+import { Lesson } from './lesson.entity'
 @Entity()
 export class Student {
   @PrimaryGeneratedColumn()
@@ -13,4 +13,7 @@ export class Student {
 
   @UpdateDateColumn()
   update_at: Date
+
+  @ManyToMany(() => Lesson, lesson => lesson.students)
+  lessons: Lesson[]
 }

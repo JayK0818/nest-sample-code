@@ -22,7 +22,7 @@ export class Lesson {
   update_at: Date
 
   // 包含多个学生
-  @ManyToMany(() => Student)
+  @ManyToMany(() => Student, student => student.lessons)
   @JoinTable()
   students: Student[]
 }

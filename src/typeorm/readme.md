@@ -274,6 +274,23 @@ export class Question {
   categories: Category[]
 }
 ```
+```ts
+// 多对多双向关系  在以上Demo的基础之上
+
+@Entity()
+export class Category {
+  @ManyToMany(() => Question, question => question.categories)
+  @JoinTable()
+  questions: Question[]
+}
+
+@Entity()
+export class Question {
+  @ManyToMany(() => Category, category => category.questions)
+  categories: Category[]
+}
+```
+  反向关系没有 **@JoinTable**, **@JoinTable**必须只在关系的一边。
 
 ## Subscriber
 

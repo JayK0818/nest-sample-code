@@ -16,4 +16,12 @@ export class LessonController {
     console.log('创建学生并选课:', createStudentDto)
     return this.lessonService.createStudentWithLesson(createStudentDto)
   }
+  @Post('get_lesson_students_list') // 获取课程下的学生列表
+  getLessonStudentsList(@Body('id') id: number) {
+    return this.lessonService.getLessonStudentsList(id)
+  }
+  @Post('get_student_lesson_list')
+  getStudentLessonList(@Body('id') id: number) {
+    return this.lessonService.getStudentLessonList(id)
+  }
 }

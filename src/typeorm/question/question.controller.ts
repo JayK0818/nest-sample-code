@@ -1,6 +1,10 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post, Get } from '@nestjs/common';
 import { QuestionService } from './question.service'
-import { CreateQuestionDto, CreateCategoryDto } from './question.dto';
+import {
+  CreateQuestionDto,
+  CreateCategoryDto,
+  SetQuestionCategoryDto,
+} from './question.dto';
 
 @Controller('typeorm/question')
 export class QuestionController {
@@ -11,6 +15,18 @@ export class QuestionController {
   }
   @Post('create_category')
   createCategory(@Body() createCateogryDto: CreateCategoryDto) {
-    return this.questionService.createCategory(createCateogryDto)
+    return this.questionService.createCategory(createCateogryDto);
   }
-}
+  @Post('set_question_category')
+  setQuestionCategory(@Body() setProps: SetQuestionCategoryDto) {
+    return this.questionService.setQuestionCategory(setProps)
+  }
+  @Get('question_list')
+  getQuestionList() {
+    return this.questionService.getQuestionList()
+  }
+  @Post('get_category_with_question_list')
+  getCategoryWithQuestionList(@Body('id') id: number) {
+    return this.questionService.getCategoryQuestionList(id)
+  }
+} 

@@ -3,8 +3,10 @@ import {
   PrimaryGeneratedColumn,
   Entity,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  ManyToMany
 } from 'typeorm';
+import { Question } from './question.entity'
 
 @Entity()
 export class Category {
@@ -14,6 +16,9 @@ export class Category {
   @Column()
   name: string;
 
+  @ManyToMany(() => Question, question => question.categories)
+  questions: Question[]
+    
   @CreateDateColumn()
   create_at: Date;
 

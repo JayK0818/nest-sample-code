@@ -168,6 +168,9 @@ export class User {
   @JoinColumn({ name: 'profile_id' }) // 可以定义关联的id名称
   profile: Profile;
   // 数据库中定义的字段为 profileId
+
+  @Column({ nullable: true })
+  profileId: number   // 从数据库中加载profileId 而不加载实体数据
 }
 ```
 
@@ -272,9 +275,10 @@ export class Question {
   @ManyToMany(() => Category)
   @JoinTable()
   categories: Category[]
+  // 在查询关联关系时, 此字段作为查询字段使用, 并需要创建一张关联表, 多对多关系实现需要借助第三张中间表 question_categories_category
 }
 ```
-```ts
+```typescript
 // 多对多双向关系  在以上Demo的基础之上
 
 @Entity()

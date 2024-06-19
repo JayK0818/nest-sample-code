@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from 'class-validator'
+import { IsString, IsNotEmpty, IsNumber, IsArray } from 'class-validator'
 
 export class CreateQuestionDto {
   @IsString()
@@ -13,5 +13,13 @@ export class CreateQuestionDto {
 export class CreateCategoryDto {
   @IsString()
   @IsNotEmpty()
-  title: string
+  name: string
+}
+
+export class SetQuestionCategoryDto {
+  @IsNumber()
+  question_id: number
+
+  @IsArray()
+  category_id_list: number[]
 }

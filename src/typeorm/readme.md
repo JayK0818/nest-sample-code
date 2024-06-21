@@ -296,6 +296,37 @@ export class Question {
 ```
   反向关系没有 **@JoinTable**, **@JoinTable**必须只在关系的一边。
 
+### 在实体中加载关系
+
+```ts
+const users = await connection.getRepository(User).find({
+  relations: ['profile', 'photos', 'videos']
+})
+```
+
+### 外键约束
+
+  有时出于性能原因, 您可能希望在实体之间建立联系。但是不需要外键约束。您可以使用 `createForeignKeyConstraints` 选项来定义是否
+  应该创建外键约束(默认值: true)
+
+```ts
+import { Entity, PrimaryColumn, Column, ManyToMany } from 'typeorm'
+
+@Entity()
+export class ActionLog {
+  @PrimaryColumn()
+  id: number
+
+  @Column()
+  date: Date
+
+  @ManyToMany(type => Person, {
+    createForeginKeyConstraints: false
+  })
+  person: Person
+}
+```
+
 ## Subscriber
 
 With TypeORM **subscribers**, you can listen to specific entity events.
